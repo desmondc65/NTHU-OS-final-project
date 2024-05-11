@@ -2758,3 +2758,5 @@ disk.o: ../machine/disk.cc /usr/include/stdc-predef.h ../lib/copyright.h \
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
+clean:
+	/bin/csh -c "rm -f */{core,nachos,DISK,*.o,swtch.s} test/{*.coff} bin/{coff2flat,coff2noff,disasm} "
