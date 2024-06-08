@@ -34,11 +34,13 @@ UserProgKernel::UserProgKernel(int argc, char **argv)
 		else if (strcmp(argv[i], "-e") == 0) {
 			execfile[++execfileNum]= argv[++i];
 		}
-		//<TODO>
+		//<TODO/done: desmond>
         // Get execfile & its priority & burst time from argv, then save them.
-		else if (strcmp(argv[i], "-epb") == 0) {
-
-	    }
+        else if (strcmp(argv[i], "-epb") == 0) {
+            execfile[++execfileNum]= argv[++i];
+            execfilePriority[execfileNum] = atoi(argv[++i]);
+            execfileBurstTime[execfileNum] = atoi(argv[++i]);
+        }
 	    //<TODO>
 	    else if (strcmp(argv[i], "-u") == 0) {
 			cout << "===========The following argument is defined in userkernel.cc" << endl;
@@ -173,16 +175,18 @@ void
 ForkExecute(Thread *t)
 {
     // cout << "Thread: " << (void *) t << endl;
-    //<TODO>
+    //<TODO/done: desmond>
     // When Thread t goes to Running state in the first time, its file should be loaded & executed.
     // Hint: This function would not be called until Thread t is on running state.
+    t->space->Load(t->getName());
+    t->space->Execute(t->getName());
     //<TODO>
 }
 
 int 
 UserProgKernel::InitializeOneThread(char* name, int priority, int burst_time)
 {
-    //<TODO>
+    //<TODO/done: desmond>
     // When each execfile comes to Exec function, Kernel helps to create a thread for it.
     // While creating a new thread, thread should be initialized, and then forked.
     t[threadNum]->space = new AddrSpace();

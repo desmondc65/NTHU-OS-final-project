@@ -38,6 +38,9 @@ CFLAGS = -G 0 -c $(INCDIR)
 all: halt shell matmult sort test1 test2 fileTest1 fileTest2 
 #<TODO>
 
+clean:
+	rm -f *.o *.coff halt shell matmult sort test1 test2 fileTest1 fileTest2 hw2_test1 hw2_test2
+	
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
 	$(AS) $(ASFLAGS) -o start.o strt.s

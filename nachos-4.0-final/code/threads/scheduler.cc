@@ -74,11 +74,40 @@ Scheduler::ReadyToRun (Thread *thread)
     // DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
     Statistics* stats = kernel->stats;
-    //<TODO>
+    //<TODO/done: desmond>
     // According to priority of Thread, put them into corresponding ReadyQueue.
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
     // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
+    // A process with priority between 0 - 49 is in L3 queue, priority between 50 - 99 is in L2 queue, and priority between 100 - 149 is in L1 queue.
+    // L1 queue uses preemptive SRTN (shortest remaining time first) scheduling algorithm. If current thread has the lowest remaining burst time, it should not be preempted by the threads in the ready queue. The burst time (job execution time) is provided by user when execute the test case.
+    // L2 queue uses a FCFS (First-Come First-Served) scheduling algorithm which means lower thread ID has higher priority.
+    // L3 queue uses a round-robin scheduling algorithm with time quantum 200 ticks (you should select a thread to run once 200 ticks elapsed). If two threads enter the L3 queue with the same priority, either one of them can execute first.
+    // An aging mechanism must be implemented, so that the priority of a process is increased by 10 after waiting for more than 400 ticks (Note: The operations of preemption and priority updating can be delayed until the next timer alarm interval).
+    if (thread->getPriority() >= 0 && thread->getPriority() <= 49) {
+        L3ReadyQueue->Append(thread);
+    } else if (thread->getPriority() >= 50 && thread->getPriority() <= 99) {
+        L2ReadyQueue->Insert(thread);
+    } else if (thread->getPriority() >= 100 && thread->getPriority() <= 149) {
+        if(L1ReadyQueue->IsEmpty()) {
+            L1ReadyQueue->Insert(thread);
+        } else {
+            if (L1ReadyQueue->Front()->getRemainingBurstTime() > thread->getRemainingBurstTime() && \
+            // swap priority if new thread has higher priority and remaining burst time is less than current thread to preempt
+                L1ReadyQueue->Front()->getPriority() < thread->getPriority()){
+                int temp = L1ReadyQueue->Front()->getPriority();
+                L1ReadyQueue->Front()->setPriority(thread->getPriority());
+                thread->setPriority(temp);
+                L1ReadyQueue->Insert(thread);
+            } else {
+                L1ReadyQueue->Insert(thread);
+            }
+        }
+    }
+    thread->setStatus(READY);
+    thread->setWaitTime(0);
+    thread->setRunTime(0);
+    thread->setRRTime(0);
     //<TODO>
     // readyList->Append(thread);
 }
@@ -102,8 +131,19 @@ Scheduler::FindNextToRun ()
         return readyList->RemoveFront();
     }*/
 
-    //<TODO>
+    //<TODO/done: desmond>
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
+    //There are 3 levels of queues: L1, L2 and L3. L1 is the highest level queue, and L3 is the lowest level queue.
+    //The scheduler should select a thread to run from the highest level queue that is not empty.
+    if (!L3ReadyQueue->IsEmpty()) {
+        return L3ReadyQueue->RemoveFront();
+    } else if (!L2ReadyQueue->IsEmpty()) {
+        return L2ReadyQueue->RemoveFront();
+    } else if (!L1ReadyQueue->IsEmpty()) {
+        return L1ReadyQueue->RemoveFront();
+    } else {
+        return NULL;
+    }
     //<TODO>
 }
 
