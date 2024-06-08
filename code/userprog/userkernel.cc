@@ -35,10 +35,13 @@ UserProgKernel::UserProgKernel(int argc, char **argv)
 			execfile[++execfileNum]= argv[++i];
 		}
 		//<TODO>
-        // Get execfile & its priority & burst time from argv, then save them.
-		else if (strcmp(argv[i], "-epb") == 0) {
 
-	    }
+        // Get execfile & its priority & burst time from argv, then save them.
+        else if (strcmp(argv[i], "-epb") == 0) {
+            execfile[++execfileNum] = argv[++i];
+            threadPriority[execfileNum] = atoi(argv[++i]);
+            threadRemainingBurstTime[execfileNum] = atoi(argv[++i]);
+        }
 	    //<TODO>
 	    else if (strcmp(argv[i], "-u") == 0) {
 			cout << "===========The following argument is defined in userkernel.cc" << endl;
@@ -176,9 +179,10 @@ ForkExecute(Thread *t)
     //<TODO>
     // When Thread t goes to Running state in the first time, its file should be loaded & executed.
     // Hint: This function would not be called until Thread t is on running state.
+    
     //<TODO>
 }
-
+//change
 int 
 UserProgKernel::InitializeOneThread(char* name, int priority, int burst_time)
 {
