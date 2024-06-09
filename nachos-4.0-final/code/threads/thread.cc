@@ -213,11 +213,13 @@ Thread::Yield ()
     
     DEBUG(dbgThread, "Yielding thread: " << name << ", ID: " << ID);
     
-    //<TODO>
+    //<TODO/done: desmond>
     // 1. Put current_thread in running state to ready state
+    kernel->scheduler->ReadyToRun(this);
     // 2. Then, find next thread from ready state to push on running state
+    nextThread = kernel->scheduler->FindNextToRun();
     // 3. After resetting some value of current_thread, then context switch
-    kernel->scheduler->Run(nextThread, finishing);
+    if(nextThread != NULL) kernel->scheduler->Run(nextThread, FALSE);
     //<TODO>
 
     (void) kernel->interrupt->SetLevel(oldLevel);
@@ -257,12 +259,20 @@ Thread::Sleep (bool finishing)
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
 
-    //<TODO>
+    //<TODO/unsure: desmond>
     // In Thread::Sleep(finishing), we put the current_thread to waiting or terminated state (depend on finishing)
     // , and determine finishing on Scheduler::Run(nextThread, finishing), not here.
     // 1. Update RemainingBurstTime
     // 2. Reset some value of current_thread, then context switch
-    kernel->scheduler->Run(nextThread, finishing);
+    if(finishing){
+        this->setStatus(BLOCKED);
+        this->setRemainingBurstTime(0);
+    }
+    else{
+        this->setStatus(READY);
+        this->setRemainingBurstTime(this->getRemainingBurstTime() - kernel->stats->totalTicks);
+    }
+
     //<TODO>
 }
 

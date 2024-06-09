@@ -57,6 +57,9 @@ class UserProgKernel : public ThreadedKernel {
     Machine *machine;
     FileSystem *fileSystem;
 
+// added by desmond
+    //<REPORT>
+
 
 #ifdef FILESYS
     SynchDisk *synchDisk;

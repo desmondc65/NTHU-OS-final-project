@@ -130,7 +130,7 @@ List<T>::RemoveFront()
     thing = first->item;
     if (first == last) {	// list had one item, now has none 
         first = NULL;
-	last = NULL;
+	    last = NULL;
     } else {
         first = element->next;
     }
