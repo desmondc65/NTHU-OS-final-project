@@ -97,7 +97,21 @@ Scheduler::ReadyToRun (Thread *thread)
         L2ReadyQueue->Insert(thread);
         q_level = 2;
     } else if (thread->getPriority() >= 100 && thread->getPriority() <= 149) {
-        L1ReadyQueue->Insert(thread);
+        if(L1ReadyQueue->IsEmpty()) {
+            L1ReadyQueue->Insert(thread);
+        } else {
+            if (L1ReadyQueue->Front()->getRemainingBurstTime() > thread->getRemainingBurstTime() && \
+            // swap priority if new thread has higher priority and remaining burst time is less than current thread to preempt
+                L1ReadyQueue->Front()->getPriority() < thread->getPriority()){
+                int temp = L1ReadyQueue->Front()->getPriority();
+                L1ReadyQueue->Front()->setPriority(thread->getPriority());
+                thread->setPriority(temp);
+                L1ReadyQueue->Insert(thread);
+
+            } else {
+                L1ReadyQueue->Insert(thread);
+            }
+        }
         q_level = 1;
     }
     DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[" << q_level << "]");
@@ -107,7 +121,6 @@ Scheduler::ReadyToRun (Thread *thread)
     thread->setWaitTime(0);
     thread->setRunTime(0);
     thread->setRRTime(0);
-    
     //<TODO>
     // readyList->Append(thread);
 }
@@ -152,7 +165,6 @@ Scheduler::FindNextToRun ()
         
     }
     // DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
-    // Print();
     return nextThread;
     //<TODO>
 }
