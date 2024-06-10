@@ -292,18 +292,19 @@ Thread::Sleep (bool finishing)
         if(this->getID() != 0){
             int oldBurstTime = this->getRemainingBurstTime();
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+            int result = oldBurstTime - this->getRunTime();
             DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
                 << kernel->stats->totalTicks << "]: Thread [" 
                 << this->getID() << "] update remaining burst time, from: [" 
                 << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
-                << "], to [" << this->getRemainingBurstTime() << "]");
+                << "], to [" << result << "]");
         }
         if(this->getID() == 0) this->setRunTime(0);
         DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
               << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
               "thread [" << this->getID() << "] is replaced, and it has executed [" 
               << this->getRunTime() << "] ticks");
-              
+
         
         this->setRRTime(0);
         this->setRunTime(0);
