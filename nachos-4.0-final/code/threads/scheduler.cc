@@ -374,7 +374,7 @@ void Scheduler::UpdatePriority() {
         }
         itL2.Next();
     }
-    DEBUG(dbgMLFQ, "update priority done");
+    // DEBUG(dbgMLFQ, "update priority done");
 }
 
 
