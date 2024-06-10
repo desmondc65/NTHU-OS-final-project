@@ -196,6 +196,7 @@ UserProgKernel::InitializeOneThread(char* name, int priority, int burst_time)
     t[threadNum]->space = new AddrSpace();
     t[threadNum]->setPriority(priority);
     t[threadNum]->setRemainingBurstTime(burst_time);
+    t[threadNum]->setRunTime(0);
 
     //fork thread
     t[threadNum]->Fork((VoidFunctionPtr) &ForkExecute, (void *)t[threadNum]);
