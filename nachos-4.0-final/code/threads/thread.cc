@@ -233,7 +233,7 @@ Thread::Yield ()
         this->setRunTime(0);
         this->setRRTime(0);
         // this->setWaitTime(0); //unsure
-        kernel->scheduler->Run(nextThread, FALSE);
+        if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
 
