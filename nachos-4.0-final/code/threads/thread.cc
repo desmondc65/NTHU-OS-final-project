@@ -318,9 +318,8 @@ Thread::Sleep (bool finishing)
         "thread [" << this->getID() << "] is replaced, and it has executed [" 
         << this->getRunTime() << "] ticks");
     
-    kernel->scheduler->Run(nextThread, finishing);
     }
-    
+    kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
 
