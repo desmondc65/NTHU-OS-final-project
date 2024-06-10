@@ -65,14 +65,14 @@ Alarm::CallBack()
     // Update RunTime & RRTime
     if (status != IdleMode) {
         kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
-        DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
+        // DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
         kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
     }
     // 3. Check Round Robin
     // If the current thread has run for more than 200 ticks, it should be preempted.
     if (kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
-        // DEBUG(dbgMLFQ, "call back: RR preempt");
+        DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->currentThread->Yield();
     }
     DEBUG(dbgMLFQ, "call back done");
