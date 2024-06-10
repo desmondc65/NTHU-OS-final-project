@@ -4,5 +4,5 @@
 echo "Cleaning and Compiling the project..."
 make clean
 make
-userprog/nachos -epb test/hw2_test1 40 5000 -epb test/hw2_test2 80 4000 -d +
+userprog/nachos -epb test/hw2_test1 40 5000 -epb test/hw2_test2 80 4000 -d z
 echo "All tests completed."
