@@ -63,7 +63,11 @@ Alarm::CallBack()
     kernel->scheduler->UpdatePriority();
     // 2. Update RunTime & RRTime
     // Update RunTime & RRTime
+<<<<<<< HEAD
     if (status != IdleMode) {
+=======
+    if (kernel->currentThread->getStatus() == RUNNING) {
+>>>>>>> parent of 01d2e60 (added debugger)
         kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
         DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
         kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
