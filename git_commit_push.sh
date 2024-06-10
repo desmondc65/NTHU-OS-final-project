@@ -16,7 +16,7 @@ git add .
 git commit -m "$COMMIT_MESSAGE"
 
 # Push to the remote repository
-git push
+git push origin
 
 # Print a success message
 echo "Changes have been committed and pushed successfully."
