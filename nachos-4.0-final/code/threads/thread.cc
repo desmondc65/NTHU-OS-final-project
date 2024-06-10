@@ -222,7 +222,20 @@ Thread::Yield ()
 
     // 3. After resetting some value of current_thread, then context switch
     if(nextThread != NULL){ 
+        int oldBurstTime = this->getRemainingBurstTime();
         this->setRemainingBurstTime(this->getRemainingBurstTime() - this->getRunTime());
+
+        DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+              << kernel->stats->totalTicks << "]: Thread [" 
+              << this->getID() << "] update remaining burst time, from: [" 
+              << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
+              << "], to [" << this->getRemainingBurstTime() << "]");
+
+
+        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
+              << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
+              "thread [" << this->getID() << "] is replaced, and it has executed [" 
+              << this->getRunTime() << "] ticks");
         this->setRunTime(0);
         this->setRRTime(0);
         // this->setWaitTime(0); //unsure
@@ -274,14 +287,28 @@ Thread::Sleep (bool finishing)
     // 2. Reset some value of current_thread, then context switch
     
     //update remaining burst time
+    int oldBurstTime = this->getRemainingBurstTime();
     this->setRemainingBurstTime(this->getRemainingBurstTime() - this->getRunTime());
+
+     DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+              << kernel->stats->totalTicks << "]: Thread [" 
+              << this->getID() << "] update remaining burst time, from: [" 
+              << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
+              << "], to [" << this->getRemainingBurstTime() << "]");
+
     //reset some values of current_thread as it is put to waiting state
+
+    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
+              << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
+              "thread [" << this->getID() << "] is replaced, and it has executed [" 
+              << this->getRunTime() << "] ticks");
     this->setRunTime(0);
     this->setWaitTime(0);
     this->setRRTime(0);
     //context switch
     kernel->scheduler->Run(nextThread, finishing);
-
+        
+    
     //<TODO>
 }
 
