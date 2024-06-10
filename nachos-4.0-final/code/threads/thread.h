@@ -121,7 +121,6 @@ class Thread {
     // 3. set/get WaitTime
     void setWaitTime(int waitTime) { WaitTime = waitTime; }
     int getWaitTime() { return WaitTime; }
-
     // 4. set/get RemainingBurstTime
     void setRemainingBurstTime(int remainingBurstTime) { RemainingBurstTime = remainingBurstTime; }
     int getRemainingBurstTime() { return RemainingBurstTime; }
@@ -131,6 +130,8 @@ class Thread {
     // 6. set/get RRTime
     void setRRTime(int rrTime) { RRTime = rrTime; }
     int getRRTime() { return RRTime; }
+    //<TODO>
+
   private:
     // some of the private data for this class is listed above
     

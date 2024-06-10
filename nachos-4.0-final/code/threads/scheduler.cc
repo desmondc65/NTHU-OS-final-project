@@ -31,17 +31,22 @@
 
 
 
-//<TODO>
+//<TODO/done: desmond>
 // Declare sorting rule of SortedList for L1 & L2 ReadyQueue
 // Hint: Funtion Type should be "static int"
+static int SRTN_Compare(Thread *t1, Thread *t2);
+static int FCFS_Compare(Thread *t1, Thread *t2);
 //<TODO>
 
 Scheduler::Scheduler()
 {
 //	schedulerType = type;
     // readyList = new List<Thread *>; 
-    //<TODO>
+    //<TODO/done: desmond>
     // Initialize L1, L2, L3 ReadyQueue
+    L1ReadyQueue = new SortedList<Thread *>(SRTN_Compare);
+    L2ReadyQueue = new SortedList<Thread *>(FCFS_Compare);
+    L3ReadyQueue = new List<Thread *>;
     //<TODO>
 	toBeDestroyed = NULL;
 } 
@@ -53,8 +58,11 @@ Scheduler::Scheduler()
 
 Scheduler::~Scheduler()
 { 
-    //<TODO>
+    //<TODO/done: desmond>
     // Remove L1, L2, L3 ReadyQueue
+    delete L1ReadyQueue;
+    delete L2ReadyQueue;
+    delete L3ReadyQueue;
     //<TODO>
     // delete readyList; 
 } 
@@ -78,6 +86,7 @@ Scheduler::ReadyToRun (Thread *thread)
     // According to priority of Thread, put them into corresponding ReadyQueue.
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
+
     // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
     // A process with priority between 0 - 49 is in L3 queue, priority between 50 - 99 is in L2 queue, and priority between 100 - 149 is in L1 queue.
     // L1 queue uses preemptive SRTN (shortest remaining time first) scheduling algorithm. If current thread has the lowest remaining burst time, it should not be preempted by the threads in the ready queue. The burst time (job execution time) is provided by user when execute the test case.
@@ -104,6 +113,7 @@ Scheduler::ReadyToRun (Thread *thread)
             }
         }
     }
+    //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);
     thread->setRunTime(0);
@@ -135,12 +145,12 @@ Scheduler::FindNextToRun ()
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
     //There are 3 levels of queues: L1, L2 and L3. L1 is the highest level queue, and L3 is the lowest level queue.
     //The scheduler should select a thread to run from the highest level queue that is not empty.
-    if (!L3ReadyQueue->IsEmpty()) {
-        return L3ReadyQueue->RemoveFront();
+    if (!L1ReadyQueue->IsEmpty()) {
+        return L1ReadyQueue->RemoveFront();
     } else if (!L2ReadyQueue->IsEmpty()) {
         return L2ReadyQueue->RemoveFront();
-    } else if (!L1ReadyQueue->IsEmpty()) {
-        return L1ReadyQueue->RemoveFront();
+    } else if (!L3ReadyQueue->IsEmpty()) {
+        return L3ReadyQueue->RemoveFront();
     } else {
         return NULL;
     }
@@ -254,22 +264,88 @@ Scheduler::Print()
     L3ReadyQueue->Apply(ThreadPrint);
 }
 
-// <TODO>
+// <TODO/done: desmond>
 
 // Function 1. Function definition of sorting rule of L1 ReadyQueue
-
+// L1 queue uses preemptive SRTN (shortest remaining time first) scheduling algorithm. If current thread has the lowest remaining burst time, it should not be preempted by the threads in the ready queue. The burst time (job execution time) is provided by user when execute the test case.
+static int SRTN_Compare(Thread *t1, Thread *t2) {
+    if (t1->getRemainingBurstTime() < t2->getRemainingBurstTime()) {
+        return -1;
+    } else if (t1->getRemainingBurstTime() > t2->getRemainingBurstTime()) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 // Function 2. Function definition of sorting rule of L2 ReadyQueue
-
+// L2 queue uses a FCFS (First-Come First-Served) scheduling algorithm which means lower thread ID has higher priority.
+static int FCFS_Compare(Thread *t1, Thread *t2) {
+    if (t1->getID() < t2->getID()) {
+        return -1;
+    } else if (t1->getID() > t2->getID()) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 // Function 3. Scheduler::UpdatePriority()
+// An aging mechanism must be implemented, so that the priority of a process is increased by 10 after waiting for more than 400 ticks (Note: The operations of preemption and priority updating can be delayed until the next timer alarm interval).
 // Hint:
 // 1. ListIterator can help.
 // 2. Update WaitTime and priority in Aging situations
 // 3. After aging, Thread may insert to different ReadyQueue
 
-void 
-Scheduler::UpdatePriority()
-{
+// unsure
+void Scheduler::UpdatePriority() {
+    int agingThreshold = 400;  // Time after which priority is increased
+    int priorityBoost = 10;    // Amount to increase priority after aging
+    int tickIncrement = 100;   // Assuming this function is called every 100 ticks
 
+    // Check L3 queue
+    ListIterator<Thread *> itL3(L3ReadyQueue);
+    while (!itL3.IsDone()) {
+        Thread *thread = itL3.Item();
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+
+        if (thread->getWaitTime() > agingThreshold) {
+            int newPriority = thread->getPriority() + priorityBoost;
+            thread->setPriority(newPriority);
+            thread->setWaitTime(0); // Reset wait time after aging
+
+            // Check if the thread needs to move from L3 to L2
+            if (newPriority >= 50 && newPriority <= 99) {
+                L3ReadyQueue->Remove(thread); // Remove from L3
+                L2ReadyQueue->Insert(thread); // Add to L2
+                itL3.Next(); // Move iterator forward
+                continue; // Skip the Next() call at the end of the loop
+            }
+        }
+        itL3.Next();
+    }
+
+    // Check L2 queue
+    ListIterator<Thread *> itL2(L2ReadyQueue);
+    while (!itL2.IsDone()) {
+        Thread *thread = itL2.Item();
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+
+        if (thread->getWaitTime() > agingThreshold) {
+            int newPriority = thread->getPriority() + priorityBoost;
+            thread->setPriority(newPriority);
+            thread->setWaitTime(0); // Reset wait time after aging
+
+            // Check if the thread needs to move from L2 to L1
+            if (newPriority >= 100) {
+                L2ReadyQueue->Remove(thread); // Remove from L2
+                L1ReadyQueue->Insert(thread); // Add to L1
+                itL2.Next(); // Move iterator forward
+                continue; // Skip the Next() call at the end of the loop
+            }
+        }
+        itL2.Next();
+    }
 }
+
+
 
 // <TODO>
