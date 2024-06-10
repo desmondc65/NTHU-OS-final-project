@@ -269,14 +269,14 @@ Thread::Yield ()
 void
 Thread::Sleep (bool finishing)
 {
-    DEBUG(dbgMLFQ, "call back");
+    
     Thread *nextThread;
     
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     
     DEBUG(dbgThread, "Sleeping thread: " << name << ", ID: " << ID);
-    DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID);//need to delete
+    DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID << " priority: " << Priority);//need to delete
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
