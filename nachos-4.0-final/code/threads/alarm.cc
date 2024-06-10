@@ -49,6 +49,7 @@ Alarm::Alarm(bool doRandom)
 void 
 Alarm::CallBack() 
 {
+    DEBUG(dbgMLFQ, "call back");
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
     
