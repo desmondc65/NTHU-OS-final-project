@@ -167,6 +167,7 @@ Scheduler::FindNextToRun ()
     }
     DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
         << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
+    return nextThread;
     //<TODO>
 }
 
@@ -190,7 +191,7 @@ Scheduler::FindNextToRun ()
 void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
-    DEBUG(dbgMLFQ, "Schduler Run: Thread [" << nextThread->getID() << "] is running.;)");
+    DEBUG(dbgMLFQ, "Schduler Run: Thread [" << nextThread->getID() << "] is running.");
     Thread *oldThread = kernel->currentThread;
  
 //	cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
