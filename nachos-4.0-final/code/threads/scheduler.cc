@@ -88,12 +88,6 @@ Scheduler::ReadyToRun (Thread *thread)
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
 
-    // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
-    // A process with priority between 0 - 49 is in L3 queue, priority between 50 - 99 is in L2 queue, and priority between 100 - 149 is in L1 queue.
-    // L1 queue uses preemptive SRTN (shortest remaining time first) scheduling algorithm. If current thread has the lowest remaining burst time, it should not be preempted by the threads in the ready queue. The burst time (job execution time) is provided by user when execute the test case.
-    // L2 queue uses a FCFS (First-Come First-Served) scheduling algorithm which means lower thread ID has higher priority.
-    // L3 queue uses a round-robin scheduling algorithm with time quantum 200 ticks (you should select a thread to run once 200 ticks elapsed). If two threads enter the L3 queue with the same priority, either one of them can execute first.
-    // An aging mechanism must be implemented, so that the priority of a process is increased by 10 after waiting for more than 400 ticks (Note: The operations of preemption and priority updating can be delayed until the next timer alarm interval).
     int q_level = 0;
     if (thread->getPriority() >= 0 && thread->getPriority() <= 49) {
         L3ReadyQueue->Append(thread);
@@ -103,21 +97,7 @@ Scheduler::ReadyToRun (Thread *thread)
         L2ReadyQueue->Insert(thread);
         q_level = 2;
     } else if (thread->getPriority() >= 100 && thread->getPriority() <= 149) {
-        if(L1ReadyQueue->IsEmpty()) {
-            L1ReadyQueue->Insert(thread);
-        } else {
-            if (L1ReadyQueue->Front()->getRemainingBurstTime() > thread->getRemainingBurstTime() && \
-            // swap priority if new thread has higher priority and remaining burst time is less than current thread to preempt
-                L1ReadyQueue->Front()->getPriority() < thread->getPriority()){
-                int temp = L1ReadyQueue->Front()->getPriority();
-                L1ReadyQueue->Front()->setPriority(thread->getPriority());
-                thread->setPriority(temp);
-                L1ReadyQueue->Insert(thread);
-
-            } else {
-                L1ReadyQueue->Insert(thread);
-            }
-        }
+        L1ReadyQueue->Insert(thread);
         q_level = 1;
     }
     DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[" << q_level << "]");
