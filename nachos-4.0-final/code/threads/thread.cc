@@ -224,6 +224,8 @@ Thread::Yield ()
     if(nextThread != NULL){ 
         this->setRemainingBurstTime(this->getRemainingBurstTime() - this->getRunTime());
         this->setRunTime(0);
+        this->setRRTime(0);
+        // this->setWaitTime(0); //unsure
         kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
