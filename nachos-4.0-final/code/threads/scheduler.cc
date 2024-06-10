@@ -78,7 +78,7 @@ Scheduler::~Scheduler()
 void
 Scheduler::ReadyToRun (Thread *thread)
 {
-    DEBUG(dbgMLFQ, "Ready to run thread: "  << thread->getID()); //need to delete
+    DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID()); //need to delete
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     // DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
@@ -122,7 +122,7 @@ Scheduler::ReadyToRun (Thread *thread)
     }
     DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
           << thread->getID() << "] is inserted into queue L[" << q_level << "]");
-    DEBUG(dbgMLFQ, "Ready to run thread: "  << thread->getID() << " done!"); //need to delete
+    DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID() << "done");//need to delete
     //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);

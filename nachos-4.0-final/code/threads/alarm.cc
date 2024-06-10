@@ -69,10 +69,10 @@ Alarm::CallBack()
     }
     // 3. Check Round Robin
     // If the current thread has run for more than 200 ticks, it should be preempted.
-    if (kernel->currentThread->getRRTime() >= 200) {
+    if (kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
         DEBUG(dbgMLFQ, "call back: RR preempt");
-        kernel->currentThread->Sleep(false);
+        kernel->currentThread->Yield();
     }
     DEBUG(dbgMLFQ, "call back done");
     //<TODO>
