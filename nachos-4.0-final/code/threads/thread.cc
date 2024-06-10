@@ -235,7 +235,8 @@ Thread::Yield ()
         if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
-
+    this->setRunTime(0);
+    this->setRRTime(0);
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
 
