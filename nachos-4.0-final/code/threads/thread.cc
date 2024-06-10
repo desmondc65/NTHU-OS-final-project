@@ -303,7 +303,8 @@ Thread::Sleep (bool finishing)
               << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
               "thread [" << this->getID() << "] is replaced, and it has executed [" 
               << this->getRunTime() << "] ticks");
-    }
+              
+        
         this->setRRTime(0);
         this->setRunTime(0);
         this->setWaitTime(0);
