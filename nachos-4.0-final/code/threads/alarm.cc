@@ -75,7 +75,7 @@ Alarm::CallBack()
         DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->currentThread->Yield();
     }
-    DEBUG(dbgMLFQ, "call back done");
+    // DEBUG(dbgMLFQ, "call back done");
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?
