@@ -208,7 +208,7 @@ UserProgKernel::InitializeOneThread(char* name, int priority, int burst_time)
 void 
 UserProgKernel::InitializeAllThreads()
 {
-    for (int i = 0; i < execfileNum; i++){
+    for (int i = 1; i <= execfileNum; i++){
         // cout << "execfile[" << i << "]: " << execfile[i] << " start " << endl;
         int a = InitializeOneThread(execfile[i], threadPriority[i], threadRemainingBurstTime[i]);
         // cout << "execfile[" << i << "]: " << execfile[i] << " end "<< endl;
