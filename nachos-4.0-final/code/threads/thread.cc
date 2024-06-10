@@ -290,7 +290,7 @@ Thread::Sleep (bool finishing)
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
             //print thread id and remaining burst time
             int result = oldBurstTime - this->getRunTime();
-            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+            if(this->getRunTime() != 0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
                 << kernel->stats->totalTicks << "]: Thread [" 
                 << this->getID() << "] update remaining burst time, from: [" 
                 << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
