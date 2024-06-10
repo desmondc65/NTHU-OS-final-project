@@ -63,11 +63,11 @@ Alarm::CallBack()
     kernel->scheduler->UpdatePriority();
     // 2. Update RunTime & RRTime
     // Update RunTime & RRTime
-    if (kernel->currentThread->getStatus() == RUNNING) {
+    // if (kernel->currentThread->getStatus() == RUNNING) {
         kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
         DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
         kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
-    }
+    // }
     // 3. Check Round Robin
     // If the current thread has run for more than 200 ticks, it should be preempted.
     if (kernel->currentThread->getRRTime() > 200) {
