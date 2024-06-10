@@ -40,6 +40,7 @@ UserProgKernel::UserProgKernel(int argc, char **argv)
             execfile[++execfileNum]= argv[++i];
             threadPriority[execfileNum] = atoi(argv[++i]);
             threadRemainingBurstTime[execfileNum] = atoi(argv[++i]);
+            DEBUG(dbgMLFQ, "-epb " << execfile[execfileNum] << " " << threadPriority[execfileNum] << " " << threadRemainingBurstTime[execfileNum]);
         }
 	    //<TODO>
 	    else if (strcmp(argv[i], "-u") == 0) {
