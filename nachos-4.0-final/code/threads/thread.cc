@@ -269,6 +269,7 @@ Thread::Yield ()
 void
 Thread::Sleep (bool finishing)
 {
+    DEBUG(dbgMLFQ, "call back");
     Thread *nextThread;
     
     ASSERT(this == kernel->currentThread);
