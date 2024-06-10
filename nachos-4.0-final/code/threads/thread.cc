@@ -306,10 +306,8 @@ Thread::Sleep (bool finishing)
     // DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
 
     //context switch
-    if(this->getID() != nextThread->getID()) {
-    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
-    }
-    kernel->scheduler->Run(nextThread, finishing);
+    if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
+    if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
 
