@@ -15,11 +15,8 @@ git add .
 # Commit with the provided message
 git commit -m "$COMMIT_MESSAGE"
 
-# Push to the primary remote repository (typically 'origin')
+# Push to the remote repository
 git push origin
 
-# Push to the secondary remote repository
-git push secondary
-
 # Print a success message
-echo "Changes have been committed and pushed to both repositories successfully."
+echo "Changes have been committed and pushed successfully."
