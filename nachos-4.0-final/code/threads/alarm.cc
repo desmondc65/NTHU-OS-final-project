@@ -49,7 +49,6 @@ Alarm::Alarm(bool doRandom)
 void 
 Alarm::CallBack() 
 {
-    DEBUG(dbgMLFQ, "call back");
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
     
@@ -66,11 +65,12 @@ Alarm::CallBack()
     if (status != IdleMode) {
         kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
         // DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
-        kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
+        if(kernel->currentThread->getPriority() <= 50) kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
     }
     // 3. Check Round Robin
     // If the current thread has run for more than 200 ticks, it should be preempted.
-    if (kernel->currentThread->getRRTime() > 200) {
+    // check if in level3
+    if (kernel->currentThread->getPriority() < 50 && kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
         DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->currentThread->Yield();
