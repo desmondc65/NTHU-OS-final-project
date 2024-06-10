@@ -65,6 +65,7 @@ Alarm::CallBack()
     // Update RunTime & RRTime
     if (kernel->currentThread->getStatus() == RUNNING) {
         kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
+        DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
         kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
     }
     // 3. Check Round Robin
