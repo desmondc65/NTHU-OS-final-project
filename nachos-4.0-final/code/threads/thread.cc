@@ -298,8 +298,7 @@ Thread::Sleep (bool finishing)
             DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
                 << kernel->stats->totalTicks << "]: Thread [" 
                 << this->getID() << "] update remaining burst time, from: [" 
-                << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
-                << "], to [" << result << "]");
+                << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
         }
         if(this->getID() == 0) this->setRunTime(0);
         DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
@@ -313,6 +312,7 @@ Thread::Sleep (bool finishing)
         this->setWaitTime(0);
         this->setRRTime(0);
     }
+    DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
     //context switch
     kernel->scheduler->Run(nextThread, finishing);
         
