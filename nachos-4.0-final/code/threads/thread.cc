@@ -226,11 +226,7 @@ Thread::Yield ()
             int oldBurstTime = this->getRemainingBurstTime();
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
 
-            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
-                << kernel->stats->totalTicks << "]: Thread [" 
-                << this->getID() << "] update remaining burst time, from: [" 
-                << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
-                << "], to [" << this->getRemainingBurstTime() << "]");
+            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << kernel->stats->totalTicks << "]: Thread [" << this->getID() << "] update remaining burst time, from: [" << oldBurstTime << "] - [" << this->getRunTime() << "] = [" << "], to [" << this->getRemainingBurstTime() << "]");
         }
         if(this->getID() == 0) this->setRunTime(0);
         DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
