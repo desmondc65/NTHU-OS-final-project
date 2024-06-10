@@ -8,7 +8,7 @@ fi
 
 # Assign the first argument as the commit message
 COMMIT_MESSAGE=$1
-
+git fetch origin main
 # Add all changes
 git add .
 
