@@ -122,6 +122,7 @@ Scheduler::ReadyToRun (Thread *thread)
     }
     DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
           << thread->getID() << "] is inserted into queue L[" << q_level << "]");
+    DEBUG(dbgMLFQ, "Ready to run thread: "  << thread->getID() << " done!"); //need to delete
     //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);
@@ -327,6 +328,7 @@ void Scheduler::UpdatePriority() {
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
+            DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority);
             thread->setPriority(newPriority);
             thread->setWaitTime(0); // Reset wait time after aging
 
@@ -353,6 +355,8 @@ void Scheduler::UpdatePriority() {
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
+            //print debug info of thread id and its new and old priority
+            DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority);
             thread->setPriority(newPriority);
             thread->setWaitTime(0); // Reset wait time after aging
 
@@ -370,6 +374,7 @@ void Scheduler::UpdatePriority() {
         }
         itL2.Next();
     }
+    DEBUG(dbgMLFQ, "update priority done");
 }
 
 

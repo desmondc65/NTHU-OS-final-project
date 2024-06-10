@@ -71,9 +71,11 @@ Alarm::CallBack()
     // If the current thread has run for more than 200 ticks, it should be preempted.
     if (kernel->currentThread->getRRTime() >= 200) {
         //how to preempt?
+        DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->currentThread->Sleep(false);
         kernel->scheduler->ReadyToRun(kernel->scheduler->FindNextToRun());
     }
+    DEBUG(dbgMLFQ, "call back done");
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?
