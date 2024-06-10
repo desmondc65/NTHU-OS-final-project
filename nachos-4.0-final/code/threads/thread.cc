@@ -221,7 +221,7 @@ Thread::Yield ()
     nextThread = kernel->scheduler->FindNextToRun();
 
     // 3. After resetting some value of current_thread, then context switch
-    if(nextThread != NULL){ 
+    if(nextThread != NULL && nextThread->getID() != 0){ 
         int oldBurstTime = this->getRemainingBurstTime();
         this->setRemainingBurstTime(this->getRemainingBurstTime() - this->getRunTime());
 

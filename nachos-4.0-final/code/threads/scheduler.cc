@@ -78,6 +78,7 @@ Scheduler::~Scheduler()
 void
 Scheduler::ReadyToRun (Thread *thread)
 {
+    DEBUG(dbgMLFQ, "Ready to run thread: "  << thread->getID()); //need to delete
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     // DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 

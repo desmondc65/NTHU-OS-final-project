@@ -80,7 +80,7 @@ Semaphore::getName()
 void
 Semaphore::P()
 {
-     DEBUG(dbgMLFQ, "semaphore P() called");
+    //  DEBUG(dbgMLFQ, "semaphore P() called");
     Interrupt *interrupt = kernel->interrupt;
     Thread *currentThread = kernel->currentThread;
     
