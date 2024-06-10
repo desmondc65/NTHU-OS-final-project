@@ -196,7 +196,7 @@ UserProgKernel::InitializeOneThread(char* name, int priority, int burst_time)
     t[threadNum]->space = new AddrSpace();
     t[threadNum]->setPriority(priority);
     t[threadNum]->setRemainingBurstTime(burst_time);
-    t[threadNum]->setRunTime(0);Å
+    t[threadNum]->setRunTime(0);
     t[threadNum]->setRRTime(0);
     t[threadNum]->setWaitTime(0);
 
