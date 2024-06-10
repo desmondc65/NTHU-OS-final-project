@@ -152,7 +152,7 @@ Scheduler::FindNextToRun ()
         
     }
     // DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
-    Print();
+    // Print();
     return nextThread;
     //<TODO>
 }

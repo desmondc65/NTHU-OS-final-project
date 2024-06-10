@@ -211,8 +211,7 @@ Thread::Yield ()
     
     ASSERT(this == kernel->currentThread);
     
-    DEBUG(dbgThread, "Yielding thread: " << name << ", ID: " << ID);
-    // DEBUG(dbgMLFQ, "Yielding thread: " << name << ", ID: " << ID); //need to delete
+    DEBUG(dbgMLFQ, "Yielding thread: " << name << ", ID: " << ID);
     //<TODO/done: desmond>
     // 1. Put current_thread in running state to ready state
     kernel->scheduler->ReadyToRun(this);
