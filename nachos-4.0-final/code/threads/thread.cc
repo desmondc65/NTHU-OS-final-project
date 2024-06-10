@@ -225,7 +225,8 @@ Thread::Yield ()
         if(this->getID() != 0){
             int oldBurstTime = this->getRemainingBurstTime();
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-        if(nextThread != NULL)    DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+
+            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
                 << kernel->stats->totalTicks << "]: Thread [" 
                 << this->getID() << "] update remaining burst time, from: [" 
                 << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
@@ -312,7 +313,7 @@ Thread::Sleep (bool finishing)
     DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
 
     //context switch
-    if(nextThread != NULL && this->getID() != nextThread->getID()) {
+    if(this->getID() != nextThread->getID()) {
     DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
         << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
         "thread [" << this->getID() << "] is replaced, and it has executed [" 
