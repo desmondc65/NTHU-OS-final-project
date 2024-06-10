@@ -53,17 +53,26 @@ Alarm::CallBack()
     MachineStatus status = interrupt->getStatus();
     
 
-    //<TODO>
-
+    //<TODO/unsure: desmond>
 
     // In each 100 ticks, 
     
     // 1. Update Priority
-
+    //An aging mechanism must be implemented, so that the priority of a process is increased by 10 after waiting for more than 400 ticks (Note: The operations of preemption and priority updating can be delayed until the next timer alarm interval).
+    kernel->scheduler->UpdatePriority();
     // 2. Update RunTime & RRTime
-
+    // Update RunTime & RRTime
+    if (kernel->currentThread->getStatus() == RUNNING) {
+        kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
+        kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
+    }
     // 3. Check Round Robin
-
+    // If the current thread has run for more than 200 ticks, it should be preempted.
+    if (kernel->currentThread->getRRTime() >= 200) {
+        //how to preempt?
+        kernel->currentThread->Sleep(false);
+        kernel->scheduler->ReadyToRun(kernel->scheduler->FindNextToRun());
+    }
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?

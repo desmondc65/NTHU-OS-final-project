@@ -216,10 +216,16 @@ Thread::Yield ()
     //<TODO/done: desmond>
     // 1. Put current_thread in running state to ready state
     kernel->scheduler->ReadyToRun(this);
+
     // 2. Then, find next thread from ready state to push on running state
     nextThread = kernel->scheduler->FindNextToRun();
+
     // 3. After resetting some value of current_thread, then context switch
-    if(nextThread != NULL) kernel->scheduler->Run(nextThread, FALSE);
+    if(nextThread != NULL){ 
+        this->setRemainingBurstTime(this->getRemainingBurstTime() - this->getRunTime());
+        this->setRunTime(0);
+        kernel->scheduler->Run(nextThread, FALSE);
+    }
     //<TODO>
 
     (void) kernel->interrupt->SetLevel(oldLevel);
@@ -259,19 +265,20 @@ Thread::Sleep (bool finishing)
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
 
-    //<TODO/unsure: desmond>
+    //<TODO/Done: desmond>
     // In Thread::Sleep(finishing), we put the current_thread to waiting or terminated state (depend on finishing)
     // , and determine finishing on Scheduler::Run(nextThread, finishing), not here.
     // 1. Update RemainingBurstTime
     // 2. Reset some value of current_thread, then context switch
-    if(finishing){
-        this->setStatus(BLOCKED);
-        this->setRemainingBurstTime(0);
-    }
-    else{
-        this->setStatus(READY);
-        this->setRemainingBurstTime(this->getRemainingBurstTime() - kernel->stats->totalTicks);
-    }
+    
+    //update remaining burst time
+    this->setRemainingBurstTime(this->getRemainingBurstTime() - this->getRunTime());
+    //reset some values of current_thread as it is put to waiting state
+    this->setRunTime(0);
+    this->setWaitTime(0);
+    this->setRRTime(0);
+    //context switch
+    kernel->scheduler->Run(nextThread, finishing);
 
     //<TODO>
 }

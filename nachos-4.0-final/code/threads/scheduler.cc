@@ -295,24 +295,57 @@ static int FCFS_Compare(Thread *t1, Thread *t2) {
 // 2. Update WaitTime and priority in Aging situations
 // 3. After aging, Thread may insert to different ReadyQueue
 
-void 
-Scheduler::UpdatePriority()
-{
-    ListIterator<Thread *> *iterator = new ListIterator<Thread *>(L1ReadyQueue);
-    for (; !iterator->IsDone(); iterator->Next()) {
-        Thread *thread = iterator->Item();
-        int waitTime = thread->getWaitTime();
-        if (waitTime > 400) {
-            int priority = thread->getPriority();
-            thread->setPriority(priority + 10);
-            thread->setWaitTime(0);
-            L1ReadyQueue->Remove(thread);
-            L2ReadyQueue->Insert(thread);
-        } else {
-            thread->setWaitTime(waitTime + 1);
+// unsure
+void Scheduler::UpdatePriority() {
+    int agingThreshold = 400;  // Time after which priority is increased
+    int priorityBoost = 10;    // Amount to increase priority after aging
+    int tickIncrement = 100;   // Assuming this function is called every 100 ticks
+
+    // Check L3 queue
+    ListIterator<Thread *> itL3(L3ReadyQueue);
+    while (!itL3.IsDone()) {
+        Thread *thread = itL3.Item();
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+
+        if (thread->getWaitTime() > agingThreshold) {
+            int newPriority = thread->getPriority() + priorityBoost;
+            thread->setPriority(newPriority);
+            thread->setWaitTime(0); // Reset wait time after aging
+
+            // Check if the thread needs to move from L3 to L2
+            if (newPriority >= 50 && newPriority <= 99) {
+                L3ReadyQueue->Remove(thread); // Remove from L3
+                L2ReadyQueue->Insert(thread); // Add to L2
+                itL3.Next(); // Move iterator forward
+                continue; // Skip the Next() call at the end of the loop
+            }
         }
+        itL3.Next();
     }
-    delete iterator;
+
+    // Check L2 queue
+    ListIterator<Thread *> itL2(L2ReadyQueue);
+    while (!itL2.IsDone()) {
+        Thread *thread = itL2.Item();
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+
+        if (thread->getWaitTime() > agingThreshold) {
+            int newPriority = thread->getPriority() + priorityBoost;
+            thread->setPriority(newPriority);
+            thread->setWaitTime(0); // Reset wait time after aging
+
+            // Check if the thread needs to move from L2 to L1
+            if (newPriority >= 100) {
+                L2ReadyQueue->Remove(thread); // Remove from L2
+                L1ReadyQueue->Insert(thread); // Add to L1
+                itL2.Next(); // Move iterator forward
+                continue; // Skip the Next() call at the end of the loop
+            }
+        }
+        itL2.Next();
+    }
 }
+
+
 
 // <TODO>
