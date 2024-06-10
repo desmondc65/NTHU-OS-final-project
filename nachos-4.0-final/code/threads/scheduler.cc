@@ -166,7 +166,7 @@ Scheduler::FindNextToRun ()
         q_level = 3;
         nextThread = L3ReadyQueue->RemoveFront();
     }
-    DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
+    if(nextThread != NULL) DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
         << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
         
     return nextThread;
