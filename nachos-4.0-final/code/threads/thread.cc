@@ -308,9 +308,8 @@ Thread::Sleep (bool finishing)
     //context switch
     if(this->getID() != nextThread->getID()) {
     DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
-    
     }
-    if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, finishing);
+    kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
 
