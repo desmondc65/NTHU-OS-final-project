@@ -310,6 +310,7 @@ static int FCFS_Compare(Thread *t1, Thread *t2) {
 
 // unsure
 void Scheduler::UpdatePriority() {
+    DEBUG(dbgMLFQ, "update priority");
     int agingThreshold = 400;  // Time after which priority is increased
     int priorityBoost = 10;    // Amount to increase priority after aging
     int tickIncrement = 100;   // Assuming this function is called every 100 ticks
