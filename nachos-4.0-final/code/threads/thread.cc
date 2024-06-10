@@ -225,7 +225,7 @@ Thread::Yield ()
         if(this->getID() != 0){
             int oldBurstTime = this->getRemainingBurstTime();
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+        if(nextThread != NULL)    DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
                 << kernel->stats->totalTicks << "]: Thread [" 
                 << this->getID() << "] update remaining burst time, from: [" 
                 << oldBurstTime << "] - [" << this->getRunTime() << "] = [" 
@@ -294,18 +294,14 @@ Thread::Sleep (bool finishing)
             int oldBurstTime = this->getRemainingBurstTime();
             
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-            DEBUG(dbgMLFQ, "get run time: " << this->getRunTime());
+            //print thread id and remaining burst time
             int result = oldBurstTime - this->getRunTime();
-            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+            if(this->getRunTime()!= 0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
                 << kernel->stats->totalTicks << "]: Thread [" 
                 << this->getID() << "] update remaining burst time, from: [" 
                 << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
         }
         if(this->getID() == 0) this->setRunTime(0);
-        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
-              << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
-              "thread [" << this->getID() << "] is replaced, and it has executed [" 
-              << this->getRunTime() << "] ticks");
 
         
         this->setRRTime(0);
@@ -315,6 +311,11 @@ Thread::Sleep (bool finishing)
     }
     DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
     //context switch
+
+    if(nextThread != NULL)  DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks 
+              << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "
+              "thread [" << this->getID() << "] is replaced, and it has executed [" 
+              << this->getRunTime() << "] ticks");
     kernel->scheduler->Run(nextThread, finishing);
         
     

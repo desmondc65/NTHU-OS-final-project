@@ -73,7 +73,6 @@ Alarm::CallBack()
         //how to preempt?
         DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->currentThread->Sleep(false);
-        kernel->scheduler->ReadyToRun(kernel->scheduler->FindNextToRun());
     }
     DEBUG(dbgMLFQ, "call back done");
     //<TODO>
