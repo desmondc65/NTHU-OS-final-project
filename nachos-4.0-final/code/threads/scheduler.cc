@@ -190,6 +190,7 @@ Scheduler::FindNextToRun ()
 void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
+    DEBUG(dbgMLFQ, "Schduler Run: Thread [" << nextThread->getID() << "] is running.;)");
     Thread *oldThread = kernel->currentThread;
  
 //	cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
