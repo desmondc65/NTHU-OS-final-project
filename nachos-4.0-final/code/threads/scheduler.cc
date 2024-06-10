@@ -107,6 +107,7 @@ Scheduler::ReadyToRun (Thread *thread)
     thread->setWaitTime(0);
     thread->setRunTime(0);
     thread->setRRTime(0);
+    
     //<TODO>
     // readyList->Append(thread);
 }
@@ -151,6 +152,7 @@ Scheduler::FindNextToRun ()
         
     }
     // DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
+    Print();
     return nextThread;
     //<TODO>
 }
