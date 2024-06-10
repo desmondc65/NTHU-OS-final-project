@@ -143,7 +143,7 @@ Thread *
 Scheduler::FindNextToRun ()
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-
+    DEBUG(dbgMLFQ, "Scheduler::FindNextToRun ()");
     /*if (readyList->IsEmpty()) {
     return NULL;
     } else {
@@ -168,6 +168,7 @@ Scheduler::FindNextToRun ()
     }
     DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
         << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
+        
     return nextThread;
     //<TODO>
 }
