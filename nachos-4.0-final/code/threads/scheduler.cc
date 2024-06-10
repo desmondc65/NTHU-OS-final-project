@@ -167,8 +167,13 @@ Scheduler::FindNextToRun ()
         q_level = 3;
         nextThread = L3ReadyQueue->RemoveFront();
     }
-    if(nextThread != NULL) DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
+    if(nextThread != NULL) {
+        DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
         << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
+        
+        //debug print of next thread id and remaining burst time
+        DEBUG(dbgMLFQ, "Thread [" << nextThread->getID() << "] remaining burst time: " << nextThread->getRemainingBurstTime());
+    }
     DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
     return nextThread;
     //<TODO>
