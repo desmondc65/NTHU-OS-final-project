@@ -49,7 +49,7 @@ Alarm::Alarm(bool doRandom)
 void 
 Alarm::CallBack() 
 {
-    DEBUG(dbgMLFQ, "call back");
+    // DEBUG(dbgMLFQ, "call back");
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
     
@@ -71,10 +71,10 @@ Alarm::CallBack()
     // If the current thread has run for more than 200 ticks, it should be preempted.
     if (kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
-        DEBUG(dbgMLFQ, "call back: RR preempt");
+        // DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->currentThread->Yield();
     }
-    DEBUG(dbgMLFQ, "call back done");
+    // DEBUG(dbgMLFQ, "call back done");
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?
