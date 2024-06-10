@@ -78,7 +78,7 @@ Scheduler::~Scheduler()
 void
 Scheduler::ReadyToRun (Thread *thread)
 {
-    DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID()); //need to delete
+    // DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID()); //need to delete
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     // DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
@@ -120,9 +120,8 @@ Scheduler::ReadyToRun (Thread *thread)
         }
         q_level = 1;
     }
-    DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
-          << thread->getID() << "] is inserted into queue L[" << q_level << "]");
-    DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID() << "done");//need to delete
+    DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[" << q_level << "]");
+    // DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID() << "done");//need to delete
     //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);
@@ -144,7 +143,7 @@ Thread *
 Scheduler::FindNextToRun ()
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-    DEBUG(dbgMLFQ, "Scheduler::FindNextToRun ()");
+    // DEBUG(dbgMLFQ, "Scheduler::FindNextToRun ()");
     /*if (readyList->IsEmpty()) {
     return NULL;
     } else {
@@ -168,13 +167,10 @@ Scheduler::FindNextToRun ()
         nextThread = L3ReadyQueue->RemoveFront();
     }
     if(nextThread != NULL) {
-        DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
-        << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
+        DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
         
-        //debug print of next thread id and remaining burst time
-        DEBUG(dbgMLFQ, "Thread [" << nextThread->getID() << "] remaining burst time: " << nextThread->getRemainingBurstTime());
     }
-    DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
+    // DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
     return nextThread;
     //<TODO>
 }
@@ -199,7 +195,7 @@ Scheduler::FindNextToRun ()
 void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
-    DEBUG(dbgMLFQ, "Schduler Run: Thread [" << nextThread->getID() << "] is running.");
+    // DEBUG(dbgMLFQ, "Schduler Run: Thread [" << nextThread->getID() << "] is running.");
     Thread *oldThread = kernel->currentThread;
  
 //	cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
@@ -320,7 +316,7 @@ static int FCFS_Compare(Thread *t1, Thread *t2) {
 
 // unsure
 void Scheduler::UpdatePriority() {
-    DEBUG(dbgMLFQ, "update priority");
+    // DEBUG(dbgMLFQ, "update priority");
     int agingThreshold = 400;  // Time after which priority is increased
     int priorityBoost = 10;    // Amount to increase priority after aging
     int tickIncrement = 100;   // Assuming this function is called every 100 ticks
@@ -341,10 +337,10 @@ void Scheduler::UpdatePriority() {
             if (newPriority >= 50 && newPriority <= 99) {
                 L3ReadyQueue->Remove(thread); // Remove from L3
                 DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
-                    << thread->getID() << "] is removed from queue L[3]");
+                    << thread->getID() << "] is removed from queue L[3] in prior");
                 L2ReadyQueue->Insert(thread); // Add to L2
                 DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
-                    << thread->getID() << "] is inserted into queue L[2]");
+                    << thread->getID() << "] is inserted into queue L[2] in prior");
                 itL3.Next(); // Move iterator forward
                 continue; // Skip the Next() call at the end of the loop
             }
@@ -369,11 +365,9 @@ void Scheduler::UpdatePriority() {
             // Check if the thread needs to move from L2 to L1
             if (newPriority >= 100) {
                 L2ReadyQueue->Remove(thread); // Remove from L2
-                DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
-                    << thread->getID() << "] is removed from queue L[2]");
+                DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  << thread->getID() << "] is removed from queue L[2] in prior");
                 L1ReadyQueue->Insert(thread); // Add to L1
-                DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
-                    << thread->getID() << "] is inserted into queue L[1]");
+                DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[1] in prior");
                 itL2.Next(); // Move iterator forward
                 continue; // Skip the Next() call at the end of the loop
             }
