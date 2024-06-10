@@ -93,10 +93,14 @@ Scheduler::ReadyToRun (Thread *thread)
     // L2 queue uses a FCFS (First-Come First-Served) scheduling algorithm which means lower thread ID has higher priority.
     // L3 queue uses a round-robin scheduling algorithm with time quantum 200 ticks (you should select a thread to run once 200 ticks elapsed). If two threads enter the L3 queue with the same priority, either one of them can execute first.
     // An aging mechanism must be implemented, so that the priority of a process is increased by 10 after waiting for more than 400 ticks (Note: The operations of preemption and priority updating can be delayed until the next timer alarm interval).
+    int q_level = 0;
     if (thread->getPriority() >= 0 && thread->getPriority() <= 49) {
         L3ReadyQueue->Append(thread);
+        q_level = 3;
+        
     } else if (thread->getPriority() >= 50 && thread->getPriority() <= 99) {
         L2ReadyQueue->Insert(thread);
+        q_level = 2;
     } else if (thread->getPriority() >= 100 && thread->getPriority() <= 149) {
         if(L1ReadyQueue->IsEmpty()) {
             L1ReadyQueue->Insert(thread);
@@ -108,11 +112,15 @@ Scheduler::ReadyToRun (Thread *thread)
                 L1ReadyQueue->Front()->setPriority(thread->getPriority());
                 thread->setPriority(temp);
                 L1ReadyQueue->Insert(thread);
+
             } else {
                 L1ReadyQueue->Insert(thread);
             }
         }
+        q_level = 1;
     }
+    DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
+          << thread->getID() << "] is inserted into queue L[" << q_level << "]");
     //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);
@@ -145,15 +153,20 @@ Scheduler::FindNextToRun ()
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
     //There are 3 levels of queues: L1, L2 and L3. L1 is the highest level queue, and L3 is the lowest level queue.
     //The scheduler should select a thread to run from the highest level queue that is not empty.
+    int q_level = 0;
+    Thread* nextThread = NULL;
     if (!L1ReadyQueue->IsEmpty()) {
-        return L1ReadyQueue->RemoveFront();
+        q_level = 1;
+        nextThread = L1ReadyQueue->RemoveFront();
     } else if (!L2ReadyQueue->IsEmpty()) {
-        return L2ReadyQueue->RemoveFront();
+        q_level = 2;
+        nextThread = L2ReadyQueue->RemoveFront();
     } else if (!L3ReadyQueue->IsEmpty()) {
-        return L3ReadyQueue->RemoveFront();
-    } else {
-        return NULL;
+        q_level = 3;
+        nextThread = L3ReadyQueue->RemoveFront();
     }
+    DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
+        << nextThread->getID() << "] is removed from queue L[" << q_level << "]");
     //<TODO>
 }
 
@@ -315,7 +328,11 @@ void Scheduler::UpdatePriority() {
             // Check if the thread needs to move from L3 to L2
             if (newPriority >= 50 && newPriority <= 99) {
                 L3ReadyQueue->Remove(thread); // Remove from L3
+                DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
+                    << thread->getID() << "] is removed from queue L[3]");
                 L2ReadyQueue->Insert(thread); // Add to L2
+                DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
+                    << thread->getID() << "] is inserted into queue L[2]");
                 itL3.Next(); // Move iterator forward
                 continue; // Skip the Next() call at the end of the loop
             }
@@ -337,7 +354,11 @@ void Scheduler::UpdatePriority() {
             // Check if the thread needs to move from L2 to L1
             if (newPriority >= 100) {
                 L2ReadyQueue->Remove(thread); // Remove from L2
+                DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
+                    << thread->getID() << "] is removed from queue L[2]");
                 L1ReadyQueue->Insert(thread); // Add to L1
+                DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
+                    << thread->getID() << "] is inserted into queue L[1]");
                 itL2.Next(); // Move iterator forward
                 continue; // Skip the Next() call at the end of the loop
             }
