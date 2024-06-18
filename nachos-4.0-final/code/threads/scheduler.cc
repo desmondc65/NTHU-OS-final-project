@@ -315,7 +315,7 @@ void Scheduler::UpdatePriority() {
     int priorityBoost = 10;    // Amount to increase priority after aging
     int tickIncrement = 100;   // Assuming this function is called every 100 ticks
 
-    DEBUG(dbgMLFQ, "UpdatePriority: Tick [" << kernel->stats->totalTicks << "]"); // self added to debug
+    // DEBUG(dbgMLFQ, "UpdatePriority: Tick [" << kernel->stats->totalTicks << "]"); // self added to debug
 
     // Check L3 queue
     ListIterator<Thread *> itL3(L3ReadyQueue);
