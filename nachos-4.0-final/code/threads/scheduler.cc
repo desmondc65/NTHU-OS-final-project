@@ -355,7 +355,7 @@ void Scheduler::UpdatePriority() {
             //[UpdatePriority] Tick [{current total tick}]: Thread [{thread ID}] changes its priority from [{old value}] to [{new value}]
             DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority);
             thread->setPriority(newPriority);
-            thread->setWaitTime(0); // Reset wait time after aging
+            // thread->setWaitTime(0); // Reset wait time after aging
 
             // Check if the thread needs to move from L2 to L1
             if (newPriority >= 100) {
