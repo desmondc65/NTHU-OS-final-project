@@ -321,7 +321,6 @@ void Scheduler::UpdatePriority() {
     ListIterator<Thread *> itL3(L3ReadyQueue);
     while (!itL3.IsDone()) {
         Thread *thread = itL3.Item();
-        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
@@ -339,6 +338,8 @@ void Scheduler::UpdatePriority() {
                     << thread->getID() << "] is inserted into queue L[2] in prior");\
             }
         }
+        // Increase wait time for all threads in L3
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
         itL3.Next();
     }
 
@@ -346,7 +347,6 @@ void Scheduler::UpdatePriority() {
     ListIterator<Thread *> itL2(L2ReadyQueue);
     while (!itL2.IsDone()) {
         Thread *thread = itL2.Item();
-        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
@@ -364,6 +364,8 @@ void Scheduler::UpdatePriority() {
                 DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[1] in prior");
             }
         }
+        // Increase wait time for all threads in L2
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
         itL2.Next();
     }
     // DEBUG(dbgMLFQ, "update priority done");
