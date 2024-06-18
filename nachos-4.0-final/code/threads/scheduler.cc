@@ -114,7 +114,10 @@ Scheduler::ReadyToRun (Thread *thread)
         }
         q_level = 1;
     }
-    DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[" << q_level << "]");
+    int t_id = thread->getID();
+    int ticks = stats->totalTicks;
+    
+    DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << ticks << "]: Thread [" << t_id << "] is inserted into queue L[" << q_level << "] in ready to run");
     // DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID() << "done");//need to delete
     //reset values
     thread->setStatus(READY);
@@ -332,10 +335,10 @@ void Scheduler::UpdatePriority() {
             if (newPriority >= 50 && newPriority <= 99) {
                 L3ReadyQueue->Remove(thread); // Remove from L3
                 DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  \
-                    << thread->getID() << "] is removed from queue L[3] in prior");
+                    << thread->getID() << "] is removed from queue L[3]");
                 L2ReadyQueue->Insert(thread); // Add to L2
                 DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
-                    << thread->getID() << "] is inserted into queue L[2] in prior");\
+                    << thread->getID() << "] is inserted into queue L[2]");\
             }
         }
         // Increase wait time for all threads in L3
