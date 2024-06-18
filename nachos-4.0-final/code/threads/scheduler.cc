@@ -116,7 +116,7 @@ Scheduler::ReadyToRun (Thread *thread)
     }
     int t_id = thread->getID();
     int ticks = stats->totalTicks;
-    
+    DEBUG(dbgMLFQ, "thread priority: " << thread->getPriority());
     DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << ticks << "]: Thread [" << t_id << "] is inserted into queue L[" << q_level << "] in ready to run");
     // DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID() << "done");//need to delete
     //reset values
