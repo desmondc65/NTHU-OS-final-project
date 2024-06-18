@@ -220,6 +220,9 @@ Thread::Yield ()
     nextThread = kernel->scheduler->FindNextToRun();
 
     // 3. After resetting some value of current_thread, then context switch
+
+    this->setRunTime(0);
+    this->setRRTime(0);
     if(nextThread != NULL){ 
         if(this->getID() != 0){
             int oldBurstTime = this->getRemainingBurstTime();
@@ -229,14 +232,10 @@ Thread::Yield ()
         }
         if(this->getID() == 0) this->setRunTime(0);
         if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks  << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "  "thread [" << this->getID() << "] is replaced, and it has executed ["  << this->getRunTime() << "] ticks");
-        this->setRunTime(0);
-        this->setRRTime(0);
         // this->setWaitTime(0); //unsure
         if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
-    this->setRunTime(0);
-    this->setRRTime(0);
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
 
