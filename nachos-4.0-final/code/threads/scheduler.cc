@@ -315,6 +315,8 @@ void Scheduler::UpdatePriority() {
     int priorityBoost = 10;    // Amount to increase priority after aging
     int tickIncrement = 100;   // Assuming this function is called every 100 ticks
 
+    DEBUG(dbgMLFQ, "UpdatePriority: Tick [" << kernel->stats->totalTicks << "]"); // self added to debug
+
     // Check L3 queue
     ListIterator<Thread *> itL3(L3ReadyQueue);
     while (!itL3.IsDone()) {
@@ -325,7 +327,7 @@ void Scheduler::UpdatePriority() {
             int newPriority = thread->getPriority() + priorityBoost;
             DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority);
             thread->setPriority(newPriority);
-            thread->setWaitTime(0); // Reset wait time after aging
+            // thread->setWaitTime(0); // Reset wait time after aging
 
             // Check if the thread needs to move from L3 to L2
             if (newPriority >= 50 && newPriority <= 99) {
@@ -334,9 +336,7 @@ void Scheduler::UpdatePriority() {
                     << thread->getID() << "] is removed from queue L[3] in prior");
                 L2ReadyQueue->Insert(thread); // Add to L2
                 DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" \
-                    << thread->getID() << "] is inserted into queue L[2] in prior");
-                itL3.Next(); // Move iterator forward
-                continue; // Skip the Next() call at the end of the loop
+                    << thread->getID() << "] is inserted into queue L[2] in prior");\
             }
         }
         itL3.Next();
@@ -362,8 +362,6 @@ void Scheduler::UpdatePriority() {
                 DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread ["  << thread->getID() << "] is removed from queue L[2] in prior");
                 L1ReadyQueue->Insert(thread); // Add to L1
                 DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[1] in prior");
-                itL2.Next(); // Move iterator forward
-                continue; // Skip the Next() call at the end of the loop
             }
         }
         itL2.Next();
