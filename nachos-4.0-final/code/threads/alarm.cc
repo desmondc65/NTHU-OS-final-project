@@ -60,11 +60,11 @@ Alarm::CallBack()
     // 1. Update Priority
     //An aging mechanism must be implemented, so that the priority of a process is increased by 10 after waiting for more than 400 ticks (Note: The operations of preemption and priority updating can be delayed until the next timer alarm interval).
     kernel->scheduler->UpdatePriority();
-    
+
     // 2. Update RunTime & RRTime
     // Update RunTime & RRTime
     kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
-    // DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
+    DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
     if(kernel->currentThread->getPriority() < 50) kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
     
     // 3. Check Round Robin
