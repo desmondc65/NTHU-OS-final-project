@@ -120,8 +120,8 @@ Scheduler::ReadyToRun (Thread *thread)
     //reset values
     thread->setStatus(READY);
     // thread->setWaitTime(0);
-    // thread->setRunTime(0);
-    // thread->setRRTime(0);
+    thread->setRunTime(0);
+    thread->setRRTime(0);
     //<TODO>
     // readyList->Append(thread);
 }
