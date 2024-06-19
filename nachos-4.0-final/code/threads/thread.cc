@@ -186,6 +186,10 @@ Thread::Finish ()
 
     //print thread id and remaining burst time
     int result = oldBurstTime - this->getRunTime();
+    if(oldRunTime > oldBurstTime){
+        result = 0;
+        oldRunTime = oldBurstTime;
+    }
     DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
         << kernel->stats->totalTicks << "]: Thread [" 
         << this->getID() << "] update remaining burst time, from: [" 
