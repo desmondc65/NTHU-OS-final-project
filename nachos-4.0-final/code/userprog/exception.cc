@@ -79,6 +79,22 @@ ExceptionHandler(ExceptionType which)
 */		case SC_Exit:
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
+			Thread * cur = kernel->currentThread;
+			int oldBurstTime = cur->getRemainingBurstTime();
+			int oldRunTime = cur->getRunTime();
+			DEBUG(dbgMLFQ, "current run time: " << cur->getRunTime() << " old burst time: " << oldBurstTime);
+			cur->setRemainingBurstTime(oldBurstTime - cur->getRunTime());
+
+			//print thread id and remaining burst time
+			int result = oldBurstTime - cur->getRunTime();
+			if(oldRunTime > oldBurstTime){
+				result = 0;
+				oldRunTime = oldBurstTime;
+			}
+			DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+				<< kernel->stats->totalTicks << "]: Thread [" 
+				<< cur->getID() << "] update remaining burst time, from: [" 
+				<< oldBurstTime << "] - [" << cur->getRunTime() << "], to [" << result << "]");
 			cout << "return value:" << val << endl;
 			kernel->currentThread->Finish();
 			break;
