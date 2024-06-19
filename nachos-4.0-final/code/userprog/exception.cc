@@ -83,7 +83,7 @@ ExceptionHandler(ExceptionType which)
 			// if(kernel->currentThread->getID() == 1){
 			// 	exit(1);
 			// }
-			int temp = kernel->currentThread->getRemainingBurstTime();
+			// int temp = kernel->currentThread->getRemainingBurstTime();
 			// int oldRunTime = kernel->currentThread->getRunTime();
 
 			// //print thread id and remaining burst time
