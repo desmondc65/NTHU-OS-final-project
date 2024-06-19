@@ -235,9 +235,10 @@ Thread::Yield ()
         // this->setWaitTime(0); //unsure
     }
     this->setStatus(READY);
-    kernel->scheduler->Run(nextThread, false);
+   
     //<TODO>
     (void) kernel->interrupt->SetLevel(oldLevel);
+     kernel->scheduler->Run(nextThread, false);
 }
 
 //----------------------------------------------------------------------
