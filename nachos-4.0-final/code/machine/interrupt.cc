@@ -124,9 +124,9 @@ IntStatus
 Interrupt::SetLevel(IntStatus now)
 {
     IntStatus old = level;
-    if(now == IntOff) DEBUG(dbgMLFQ, "now == IntOff");
-    if(now == IntOn) DEBUG(dbgMLFQ, "now == IntOn");
-    if(inHandler == false) DEBUG(dbgMLFQ, "inHandler == false");
+    // if(now == IntOff) DEBUG(dbgMLFQ, "now == IntOff");
+    // if(now == IntOn) DEBUG(dbgMLFQ, "now == IntOn");
+    // if(inHandler == false) DEBUG(dbgMLFQ, "inHandler == false");
 
     // interrupt handlers are prohibited from enabling interrupts
     ASSERT((now == IntOff) || (inHandler == FALSE));
