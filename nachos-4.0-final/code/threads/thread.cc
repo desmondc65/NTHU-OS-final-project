@@ -271,12 +271,11 @@ Thread::Sleep (bool finishing)
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     
-    // DEBUG(dbgThread, "Sleeping thread: " << name << ", ID: " << ID);
+    DEBUG(dbgThread, "Sleeping thread: " << name << ", ID: " << ID);
     // DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID << " priority: " << Priority);//need to delete
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
-
     // DEBUG(dbgMLFQ, "Sleeping thread: found next thread");//need to delete
     //<TODO/Done: desmond>
     // In Thread::Sleep(finishing), we put the current_thread to waiting or terminated state (depend on finishing)
