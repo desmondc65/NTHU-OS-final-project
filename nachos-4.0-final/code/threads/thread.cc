@@ -284,31 +284,31 @@ Thread::Sleep (bool finishing)
     // 2. Reset some value of current_thread, then context switch
     
     //update remaining burst time
-    if(nextThread != NULL){ 
-        if(this->getID() != 0){
-            int oldBurstTime = this->getRemainingBurstTime();
-            
-            this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-            //print thread id and remaining burst time
-            int result = oldBurstTime - this->getRunTime();
-            DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
-                << kernel->stats->totalTicks << "]: Thread [" 
-                << this->getID() << "] update remaining burst time, from: [" 
-                << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-        }
-        if(this->getID() == 0) this->setRunTime(0);
-
-        this->setStatus(BLOCKED);
-        this->setRRTime(0);
-        this->setRunTime(0);
-        this->setWaitTime(0);
-        this->setRRTime(0);
+    
+    if(this->getID() != 0){
+        int oldBurstTime = this->getRemainingBurstTime();
+        
+        this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+        //print thread id and remaining burst time
+        int result = oldBurstTime - this->getRunTime();
+        DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+            << kernel->stats->totalTicks << "]: Thread [" 
+            << this->getID() << "] update remaining burst time, from: [" 
+            << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
     }
+    if(this->getID() == 0) this->setRunTime(0);
+
+    this->setStatus(BLOCKED);
+    this->setRRTime(0);
+    this->setRunTime(0);
+    this->setWaitTime(0);
+    this->setRRTime(0);
+
     // DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
 
     //context switch
-    if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
-    if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, finishing);
+    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
+    kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
 
