@@ -178,27 +178,6 @@ Thread::Finish ()
 {
     (void) kernel->interrupt->SetLevel(IntOff);		
     ASSERT(this == kernel->currentThread);
-
-    // int oldBurstTime = this->getRemainingBurstTime();
-    // int oldRunTime = this->getRunTime();
-    // DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
-    // this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-
-    // //print thread id and remaining burst time
-    // int result = oldBurstTime - this->getRunTime();
-    // if(oldRunTime > oldBurstTime){
-    //     result = 0;
-    //     oldRunTime = oldBurstTime;
-    // }
-    // DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
-    //     << kernel->stats->totalTicks << "]: Thread [" 
-    //     << this->getID() << "] update remaining burst time, from: [" 
-    //     << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-
-    // //2. reset some values of current_thread
-    // this->setRunTime(0);
-    // this->setRRTime(0);
-    // this->setWaitTime(0);
     DEBUG(dbgThread, "Finishing thread: " << name << ", ID: " << ID);
     
     Sleep(TRUE);				// invokes SWITCH
@@ -231,8 +210,6 @@ Thread::Yield ()
     
     ASSERT(this == kernel->currentThread);
     
-    DEBUG(dbgMLFQ, "Yielding thread: " << name << ", ID: " << ID);
-
     //<TODO/done: desmond>
 
     // 1. Put current_thread in running state to ready state
@@ -245,7 +222,6 @@ Thread::Yield ()
     if (nextThread != NULL) {
         //update remaining burst time
         int oldBurstTime = this->getRemainingBurstTime();
-        DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
         this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
 
         //print thread id and remaining burst time
@@ -299,8 +275,6 @@ Thread::Sleep (bool finishing)
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     
-    DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID);
-    // DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID << " priority: " << Priority);//need to delete
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
@@ -314,7 +288,6 @@ Thread::Sleep (bool finishing)
     //1. update remaining burst time
     int oldBurstTime = this->getRemainingBurstTime();
     int oldRunTime = this->getRunTime();
-    DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
     this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
 
     //print thread id and remaining burst time
