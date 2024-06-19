@@ -230,6 +230,7 @@ Thread::Yield ()
 
         //print thread id and remaining burst time
         int result = oldBurstTime - this->getRunTime();
+        int oldRunTime= this->getRunTime();
         DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
             << kernel->stats->totalTicks << "]: Thread [" 
             << this->getID() << "] update remaining burst time, from: [" 
@@ -242,7 +243,7 @@ Thread::Yield ()
         this->setWaitTime(0);
 
         //context switch
-        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << result << "] ticks");
+        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
         kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
@@ -292,6 +293,7 @@ Thread::Sleep (bool finishing)
     
     //1. update remaining burst time
     int oldBurstTime = this->getRemainingBurstTime();
+    int oldRunTime = this->getRunTime();
     DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
     this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
 
@@ -308,7 +310,7 @@ Thread::Sleep (bool finishing)
     this->setWaitTime(0);
 
     //context switch
-    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << result << "] ticks");
+    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
     kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
