@@ -240,7 +240,7 @@ Thread::Yield ()
             << kernel->stats->totalTicks << "]: Thread [" 
             << this->getID() << "] update remaining burst time, from: [" 
             << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-        kernel->scheduler->Run(nextThread, FALSE);
+        if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
     (void) kernel->interrupt->SetLevel(oldLevel);
@@ -305,7 +305,7 @@ Thread::Sleep (bool finishing)
         << this->getID() << "] update remaining burst time, from: [" 
         << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
 
-    kernel->scheduler->Run(nextThread, finishing);
+    if(this->getID() != nextThread->getID())kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
 
