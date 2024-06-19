@@ -327,6 +327,7 @@ void Scheduler::UpdatePriority() {
                     << thread->getID() << "] is inserted into queue L[2]");\
             }
         }
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
         // Increase wait time for all threads in L3
         itL3.Next();
     }
