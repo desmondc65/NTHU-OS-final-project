@@ -96,7 +96,7 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
 				<< kernel->stats->totalTicks << "]: Thread [" 
 				<< cur->getID() << "] update remaining burst time, from: [" 
-				<< oldBurstTime << "] - [" << cur->getRunTime() << "], to [" << result << "]");
+				<< oldBurstTime << "] - [" << oldRunTime << "], to [" << result << "]");
 			cout << "return value:" << val << endl;
 			kernel->currentThread->Finish();
 			break;
