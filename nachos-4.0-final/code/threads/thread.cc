@@ -242,6 +242,7 @@ Thread::Yield ()
         this->setWaitTime(0);
 
         //context switch
+        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << result << "] ticks");
         kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
@@ -307,7 +308,7 @@ Thread::Sleep (bool finishing)
     this->setWaitTime(0);
 
     //context switch
-    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
+    DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << result << "] ticks");
     kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
