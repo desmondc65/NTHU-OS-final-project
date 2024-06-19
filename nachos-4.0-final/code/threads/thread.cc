@@ -233,8 +233,8 @@ Thread::Yield ()
         if(this->getID() == 0) this->setRunTime(0);
         if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks  << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "  "thread [" << this->getID() << "] is replaced, and it has executed ["  << this->getRunTime() << "] ticks");
         // this->setWaitTime(0); //unsure
-        if(this->getID() != nextThread->getID()) kernel->scheduler->Run(nextThread, FALSE);
     }
+    kernel->scheduler->Run(nextThread, FALSE);
     //<TODO>
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
