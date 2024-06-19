@@ -85,7 +85,6 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 
-			DEBUG(dbgMLFQ, "current run time: " << cur->getRunTime() << " old burst time: " << oldBurstTime);
 			cur->setRemainingBurstTime(oldBurstTime - cur->getRunTime());
 
 			//print thread id and remaining burst time
@@ -93,7 +92,7 @@ ExceptionHandler(ExceptionType which)
 				result = 0;
 				oldRunTime = oldBurstTime;
 			}
-			DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+			if(oldBurstTime != 0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
 				<< kernel->stats->totalTicks << "]: Thread [" 
 				<< cur->getID() << "] update remaining burst time, from: [" 
 				<< oldBurstTime << "] - [" << oldRunTime << "], to [" << result << "]");

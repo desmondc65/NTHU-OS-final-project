@@ -64,7 +64,6 @@ Alarm::CallBack()
     // 2. Update RunTime & RRTime
     // Update RunTime & RRTime
     kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
-    // DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
     if(kernel->currentThread->getPriority() < 50) kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
     
     // 3. Check Round Robin
@@ -72,7 +71,6 @@ Alarm::CallBack()
     // check if in level3
     if (kernel->currentThread->getPriority() < 50 && kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
-        // DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->interrupt->YieldOnReturn();
     }
     //<TODO>
