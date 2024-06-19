@@ -83,6 +83,18 @@ ExceptionHandler(ExceptionType which)
 			// if(kernel->currentThread->getID() == 1){
 			// 	exit(1);
 			// }
+			int oldBurstTime = kernel->currentThread->getRemainingBurstTime();
+			int oldRunTime = kernel->currentThread->getRunTime();
+			DEBUG(dbgMLFQ, "current run time: " << kernel->currentThread->getRunTime() << " old burst time: " << oldBurstTime);
+			kernel->currentThread->setRemainingBurstTime(oldBurstTime - kernel->currentThread->getRunTime());
+
+			//print thread id and remaining burst time
+			int result = oldBurstTime - kernel->currentThread->getRunTime();
+			DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+				<< kernel->stats->totalTicks << "]: Thread [" 
+				<< kernel->currentThread->getID() << "] update remaining burst time, from: [" 
+				<< oldBurstTime << "] - [" << kernel->currentThread->getRunTime() << "], to [" << result << "]");
+
 			kernel->currentThread->Finish();
 			
 			break;
