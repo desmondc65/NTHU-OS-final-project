@@ -80,7 +80,11 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 			cout << "return value:" << val << endl;
+			if(kernel->currentThread->getID() == 1){
+				exit(1);
+			}
 			kernel->currentThread->Finish();
+			
 			break;
 
 		case SC_Msg:
