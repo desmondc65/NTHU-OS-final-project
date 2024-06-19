@@ -221,8 +221,7 @@ Thread::Yield ()
 
     // 3. After resetting some value of current_thread, then context switch
 
-    this->setRunTime(0);
-    this->setRRTime(0);
+    
     if(nextThread != NULL){ 
         if(this->getID() != 0){
             int oldBurstTime = this->getRemainingBurstTime();
@@ -234,6 +233,8 @@ Thread::Yield ()
         if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks  << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "  "thread [" << this->getID() << "] is replaced, and it has executed ["  << this->getRunTime() << "] ticks");
         // this->setWaitTime(0); //unsure
     }
+    this->setRunTime(0);
+    this->setRRTime(0);
     this->setStatus(READY);
    
     //<TODO>
@@ -303,7 +304,6 @@ Thread::Sleep (bool finishing)
     // this->setRRTime(0);
     // this->setRunTime(0);
     // this->setWaitTime(0);
-    // this->setRRTime(0);
 
     // DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
 
