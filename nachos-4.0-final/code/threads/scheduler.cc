@@ -306,11 +306,22 @@ void Scheduler::UpdatePriority() {
     int priorityBoost = 10;    // Amount to increase priority after aging
     int tickIncrement = 100;   // Assuming this function is called every 100 ticks
 
-    // Check L3 queue
+    // update wait time for all threads in L2 and L3
+    ListIterator<Thread *> itL2(L2ReadyQueue);
+    while (!itL2.IsDone()) {
+        Thread *thread = itL2.Item();
+        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+    }
     ListIterator<Thread *> itL3(L3ReadyQueue);
     while (!itL3.IsDone()) {
         Thread *thread = itL3.Item();
         thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+    }
+
+    // Check L3 queue
+    ListIterator<Thread *> itL3_t(L3ReadyQueue);
+    while (!itL3_t.IsDone()) {
+        Thread *thread = itL3_t.Item();
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
@@ -328,15 +339,14 @@ void Scheduler::UpdatePriority() {
                     << thread->getID() << "] is inserted into queue L[2]");\
             }
         }
-        itL3.Next();
+        itL3_t.Next();
     }
 
     // Check L2 queue
-    ListIterator<Thread *> itL2(L2ReadyQueue);
-    while (!itL2.IsDone()) {
-        Thread *thread = itL2.Item();
-        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
 
+    ListIterator<Thread *> itL2_t(L2ReadyQueue);
+    while (!itL2_t.IsDone()) {
+        Thread *thread = itL2_t.Item();
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
             DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from " << thread->getPriority() << " to " << newPriority);
@@ -353,7 +363,7 @@ void Scheduler::UpdatePriority() {
         }
         
         // Increase wait time for all threads in L2
-        itL2.Next();
+        itL2_t.Next();
     }
 }
 
