@@ -119,7 +119,7 @@ Scheduler::ReadyToRun (Thread *thread)
     // DEBUG(dbgMLFQ, "to ready queue thread: "  << thread->getID() << "done");//need to delete
     //reset values
     thread->setStatus(READY);
-    // thread->setWaitTime(0);
+    thread->setWaitTime(0);
     thread->setRunTime(0);
     thread->setRRTime(0);
     //<TODO>
