@@ -339,7 +339,7 @@ void Scheduler::UpdatePriority() {
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
-            
+            thread->setPriority(newPriority);
             DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from " << thread->getPriority() << " to " << newPriority);
             thread->setPriority(newPriority);
 
