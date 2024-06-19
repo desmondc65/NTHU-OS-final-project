@@ -89,6 +89,7 @@ Scheduler::ReadyToRun (Thread *thread)
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
 
     int q_level = 0;
+
     if (thread->getPriority() >= 0 && thread->getPriority() <= 49) {
         L3ReadyQueue->Append(thread);
         q_level = 3;
@@ -120,7 +121,7 @@ Scheduler::ReadyToRun (Thread *thread)
     //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);
-    // thread->setRunTime(0);
+    thread->setRunTime(0);
     thread->setRRTime(0);
     //<TODO>
     // readyList->Append(thread);
