@@ -178,7 +178,23 @@ Thread::Finish ()
 {
     (void) kernel->interrupt->SetLevel(IntOff);		
     ASSERT(this == kernel->currentThread);
-    
+
+    int oldBurstTime = this->getRemainingBurstTime();
+    int oldRunTime = this->getRunTime();
+    DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
+    this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+
+    //print thread id and remaining burst time
+    int result = oldBurstTime - this->getRunTime();
+    DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+        << kernel->stats->totalTicks << "]: Thread [" 
+        << this->getID() << "] update remaining burst time, from: [" 
+        << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
+
+    //2. reset some values of current_thread
+    this->setRunTime(0);
+    this->setRRTime(0);
+    this->setWaitTime(0);
     DEBUG(dbgThread, "Finishing thread: " << name << ", ID: " << ID);
     
     Sleep(TRUE);				// invokes SWITCH
