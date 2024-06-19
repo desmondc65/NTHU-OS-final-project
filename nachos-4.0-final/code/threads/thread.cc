@@ -284,20 +284,16 @@ Thread::Sleep (bool finishing)
     // 2. Reset some value of current_thread, then context switch
     
     //1. update remaining burst time
-    if(this->getID() != 0){
-        int oldBurstTime = this->getRemainingBurstTime();
-        
-        this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-        //print thread id and remaining burst time
-        int result = oldBurstTime - this->getRunTime();
-        DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
-            << kernel->stats->totalTicks << "]: Thread [" 
-            << this->getID() << "] update remaining burst time, from: [" 
-            << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-    }
-    if(this->getID() == 0){
-        this->setRunTime(0);
-    }
+    int oldBurstTime = this->getRemainingBurstTime();
+    DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
+    this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+    //print thread id and remaining burst time
+    int result = oldBurstTime - this->getRunTime();
+    DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+        << kernel->stats->totalTicks << "]: Thread [" 
+        << this->getID() << "] update remaining burst time, from: [" 
+        << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
+
 
     this->setStatus(BLOCKED);
     // this->setRRTime(0);
