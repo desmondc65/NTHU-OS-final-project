@@ -326,7 +326,7 @@ void Scheduler::UpdatePriority() {
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
-            DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority << "in L3");
+            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from " << thread->getPriority() << " to " << newPriority << "in L2");
             thread->setPriority(newPriority);
             // thread->setWaitTime(0); // Reset wait time after aging
 
@@ -352,9 +352,10 @@ void Scheduler::UpdatePriority() {
 
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
-            //print debug info of thread id and its new and old priority
+            //print debug info of thread id and its new and old priority like this [UpdatePriority] Tick [{current total tick}]: Thread [{thread ID}] changes its priority from [{old value}] to [{new value}]
+            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from " << thread->getPriority() << " to " << newPriority << "in L2");
             //[UpdatePriority] Tick [{current total tick}]: Thread [{thread ID}] changes its priority from [{old value}] to [{new value}]
-            DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority << "in L2");
+            // DEBUG(dbgMLFQ, "Thread [" << thread->getID() << "] priority is increased from " << thread->getPriority() << " to " << newPriority << "in L2");
             thread->setPriority(newPriority);
             // thread->setWaitTime(0); // Reset wait time after aging
 
