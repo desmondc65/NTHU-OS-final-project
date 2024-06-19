@@ -297,7 +297,7 @@ Thread::Sleep (bool finishing)
     }
     if(this->getID() == 0){
         this->setRunTime(0);
-        
+    }
 
     this->setStatus(BLOCKED);
     // this->setRRTime(0);
