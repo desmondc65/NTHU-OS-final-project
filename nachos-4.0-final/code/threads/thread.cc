@@ -271,7 +271,7 @@ Thread::Sleep (bool finishing)
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     
-    DEBUG(dbgThread, "Sleeping thread: " << name << ", ID: " << ID);
+    DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID);
     // DEBUG(dbgMLFQ, "Sleeping thread: " << name << ", ID: " << ID << " priority: " << Priority);//need to delete
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
