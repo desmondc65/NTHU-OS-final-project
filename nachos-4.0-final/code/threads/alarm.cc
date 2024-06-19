@@ -63,7 +63,7 @@ Alarm::CallBack()
 
     // 2. Update RunTime & RRTime
     // Update RunTime & RRTime
-    // kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
+    kernel->currentThread->setRunTime(kernel->currentThread->getRunTime() + TimerTicks);
     DEBUG(dbgMLFQ, "call back: " << kernel->currentThread->getName() << " run time: " << kernel->currentThread->getRunTime());
     if(kernel->currentThread->getPriority() < 50) kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + TimerTicks);
     
