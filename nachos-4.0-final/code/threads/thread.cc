@@ -214,7 +214,7 @@ Thread::Yield ()
     DEBUG(dbgMLFQ, "Yielding thread: " << name << ", ID: " << ID);
 
     //<TODO/done: desmond>
-    
+
     // 1. Put current_thread in running state to ready state
     kernel->scheduler->ReadyToRun(this);
 
@@ -275,7 +275,7 @@ Thread::Sleep (bool finishing)
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
-    // DEBUG(dbgMLFQ, "Sleeping thread: found next thread");//need to delete
+
     //<TODO/done: desmond>
     // In Thread::Sleep(finishing), we put the current_thread to waiting or terminated state (depend on finishing)
     // , and determine finishing on Scheduler::Run(nextThread, finishing), not here.
@@ -286,6 +286,7 @@ Thread::Sleep (bool finishing)
     int oldBurstTime = this->getRemainingBurstTime();
     DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
     this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+
     //print thread id and remaining burst time
     int result = oldBurstTime - this->getRunTime();
     DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
@@ -293,13 +294,10 @@ Thread::Sleep (bool finishing)
         << this->getID() << "] update remaining burst time, from: [" 
         << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
 
-
-    this->setStatus(BLOCKED);
-    // this->setRRTime(0);
-    // this->setRunTime(0);
-    // this->setWaitTime(0);
-
-    // DEBUG(dbgMLFQ, "Sleeping thread: done");//need to delete
+    //2. reset some values of current_thread
+    this->setRunTime(0);
+    this->setRRTime(0);
+    this->setWaitTime(0);
 
     //context switch
     DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << this->getRunTime() << "] ticks");
