@@ -311,11 +311,14 @@ void Scheduler::UpdatePriority() {
     while (!itL2.IsDone()) {
         Thread *thread = itL2.Item();
         thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+        itL2.Next();
     }
+    
     ListIterator<Thread *> itL3(L3ReadyQueue);
     while (!itL3.IsDone()) {
         Thread *thread = itL3.Item();
         thread->setWaitTime(thread->getWaitTime() + tickIncrement);
+        itL3.Next();
     }
 
     // Check L3 queue
