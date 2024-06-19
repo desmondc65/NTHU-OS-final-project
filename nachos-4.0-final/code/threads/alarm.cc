@@ -73,9 +73,8 @@ Alarm::CallBack()
     if (kernel->currentThread->getPriority() < 50 && kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
         DEBUG(dbgMLFQ, "call back: RR preempt");
-        kernel->currentThread->Yield();
+        kernel->interrupt->YieldOnReturn();
     }
-    // DEBUG(dbgMLFQ, "call back done");
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?
