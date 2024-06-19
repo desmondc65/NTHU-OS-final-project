@@ -121,7 +121,7 @@ Scheduler::ReadyToRun (Thread *thread)
     //reset values
     thread->setStatus(READY);
     thread->setWaitTime(0);
-    thread->setRunTime(0);
+    // thread->setRunTime(0);
     thread->setRRTime(0);
     //<TODO>
     // readyList->Append(thread);
@@ -163,8 +163,8 @@ Scheduler::FindNextToRun ()
         nextThread = L3ReadyQueue->RemoveFront();
     }
     if(nextThread != NULL) {
-        DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is removed from queue L[" << q_level << "] to run in the CPU");
-        
+        DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is removed from queue L[" << q_level << "] in find next to run");
+        DEBUG(dbgMLFQ, "Thread [" << nextThread->getID() << "] run time: " << nextThread->getRunTime());
     }
     // DEBUG(dbgMLFQ, "Scheduler::FindNextToRun () done");
     return nextThread;

@@ -212,7 +212,9 @@ Thread::Yield ()
     ASSERT(this == kernel->currentThread);
     
     DEBUG(dbgMLFQ, "Yielding thread: " << name << ", ID: " << ID);
+
     //<TODO/done: desmond>
+    
     // 1. Put current_thread in running state to ready state
     kernel->scheduler->ReadyToRun(this);
 
@@ -220,26 +222,23 @@ Thread::Yield ()
     nextThread = kernel->scheduler->FindNextToRun();
 
     // 3. After resetting some value of current_thread, then context switch
+    if (nextThread != NULL) {
+        //update remaining burst time
+        int oldBurstTime = this->getRemainingBurstTime();
+        this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+        DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << kernel->stats->totalTicks << "]: Thread [" << this->getID() << "] update remaining burst time, from: [" << oldBurstTime << "] - [" << this->getRunTime() << "] = [" << "], to [" << this->getRemainingBurstTime() << "]");
 
-    
-    if(nextThread != NULL){ 
-        if(this->getID() != 0){
-            int oldBurstTime = this->getRemainingBurstTime();
-            this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+        //reset some values of current_thread
+        this->setStatus(BLOCKED);
+        this->setRunTime(0);
+        this->setRRTime(0);
+        this->setWaitTime(0);
 
-            if(this->getRunTime() != 0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << kernel->stats->totalTicks << "]: Thread [" << this->getID() << "] update remaining burst time, from: [" << oldBurstTime << "] - [" << this->getRunTime() << "] = [" << "], to [" << this->getRemainingBurstTime() << "]");
-        }
-        if(this->getID() == 0) this->setRunTime(0);
-        if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks  << "]: Thread [" << nextThread->getID() << "] is now selected for execution, "  "thread [" << this->getID() << "] is replaced, and it has executed ["  << this->getRunTime() << "] ticks");
-        // this->setWaitTime(0); //unsure
+        //context switch
+        kernel->scheduler->Run(nextThread, FALSE);
     }
-    this->setRunTime(0);
-    this->setRRTime(0);
-    this->setStatus(READY);
-   
     //<TODO>
     (void) kernel->interrupt->SetLevel(oldLevel);
-     kernel->scheduler->Run(nextThread, false);
 }
 
 //----------------------------------------------------------------------
