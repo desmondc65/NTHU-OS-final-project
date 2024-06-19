@@ -232,11 +232,11 @@ Thread::Yield ()
 
         //context switch
         if(this->getID() != nextThread->getID())DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
-        if(oldRunTime!=0 && this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+        if(oldRunTime!=0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
             << kernel->stats->totalTicks << "]: Thread [" 
             << this->getID() << "] update remaining burst time, from: [" 
             << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-        if(this->getID() != nextThread->getID() && oldRunTime!=0){
+        if(oldRunTime!=0){
             this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
             this->setStatus(BLOCKED);
             this->setRunTime(0);
@@ -299,11 +299,11 @@ Thread::Sleep (bool finishing)
 
     //context switch
     if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
-    if(oldRunTime!=0 && this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+    if(oldRunTime!=0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
         << kernel->stats->totalTicks << "]: Thread [" 
         << this->getID() << "] update remaining burst time, from: [" 
         << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-    if(this->getID() != nextThread->getID() && oldRunTime!=0){
+    if(oldRunTime!=0){
         this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
         this->setStatus(BLOCKED);
         this->setRunTime(0);
