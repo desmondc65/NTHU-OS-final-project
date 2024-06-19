@@ -24,4 +24,4 @@ case "$1" in
         ;;
 esac
 
-echo "All tests completed."
+# echo "All tests completed."
