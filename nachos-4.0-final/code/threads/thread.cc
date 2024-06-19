@@ -219,7 +219,7 @@ Thread::Yield ()
     nextThread = kernel->scheduler->FindNextToRun();
 
     // 3. After resetting some value of current_thread, then context switch
-    if (nextThread != NULL && nextThread->getID() != this->getID()) {
+    if (nextThread != NULL) {
         //update remaining burst time
         int oldBurstTime = this->getRemainingBurstTime();
         this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
@@ -235,12 +235,11 @@ Thread::Yield ()
         this->setWaitTime(0);
 
         //context switch
-        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
-        if(oldRunTime != 0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+        if(this->getID() != nextThread->getID())DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
+        if(oldRunTime!=0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
             << kernel->stats->totalTicks << "]: Thread [" 
             << this->getID() << "] update remaining burst time, from: [" 
             << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
-         
         kernel->scheduler->Run(nextThread, FALSE);
     }
     //<TODO>
@@ -286,31 +285,27 @@ Thread::Sleep (bool finishing)
     // 1. Update RemainingBurstTime
     // 2. Reset some value of current_thread, then context switch
     
-    if(nextThread->getID() != this->getID()){
-        //1. update remaining burst time
-        int oldBurstTime = this->getRemainingBurstTime();
-        int oldRunTime = this->getRunTime();
-        this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
+    //1. update remaining burst time
+    int oldBurstTime = this->getRemainingBurstTime();
+    int oldRunTime = this->getRunTime();
+    this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
 
-        //print thread id and remaining burst time
-        int result = oldBurstTime - this->getRunTime();
+    //print thread id and remaining burst time
+    int result = oldBurstTime - this->getRunTime();
 
-        //2. reset some values of current_thread
-        this->setRunTime(0);
-        this->setRRTime(0);
-        this->setWaitTime(0);
+    //2. reset some values of current_thread
+    this->setRunTime(0);
+    this->setRRTime(0);
+    this->setWaitTime(0);
 
-        //context switch
-        DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
-        if(oldRunTime!=0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
-            << kernel->stats->totalTicks << "]: Thread [" 
-            << this->getID() << "] update remaining burst time, from: [" 
-            << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
+    //context switch
+    if(this->getID() != nextThread->getID()) DEBUG(dbgMLFQ, "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() << "] is now selected for execution, " << "thread [" << this->getID() << "] is replaced, and it has executed [" << oldRunTime << "] ticks");
+    if(oldRunTime!=0) DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+        << kernel->stats->totalTicks << "]: Thread [" 
+        << this->getID() << "] update remaining burst time, from: [" 
+        << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
 
-        kernel->scheduler->Run(nextThread, finishing);
-    }
-
-    
+    kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }
 
