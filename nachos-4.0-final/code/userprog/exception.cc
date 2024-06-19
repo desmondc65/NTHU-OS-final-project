@@ -55,6 +55,11 @@ ExceptionHandler(ExceptionType which)
 	int	type = kernel->machine->ReadRegister(2);
 	int	val, status;
 
+
+	Thread * cur = kernel->currentThread;
+	int oldBurstTime = cur->getRemainingBurstTime();
+	int oldRunTime = cur->getRunTime();
+	int result = oldBurstTime - cur->getRunTime();
     switch (which) {
 	case SyscallException:
 	    switch(type) {
@@ -79,14 +84,11 @@ ExceptionHandler(ExceptionType which)
 */		case SC_Exit:
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
-			Thread * cur = kernel->currentThread;
-			int oldBurstTime = cur->getRemainingBurstTime();
-			int oldRunTime = cur->getRunTime();
+
 			DEBUG(dbgMLFQ, "current run time: " << cur->getRunTime() << " old burst time: " << oldBurstTime);
 			cur->setRemainingBurstTime(oldBurstTime - cur->getRunTime());
 
 			//print thread id and remaining burst time
-			int result = oldBurstTime - cur->getRunTime();
 			if(oldRunTime > oldBurstTime){
 				result = 0;
 				oldRunTime = oldBurstTime;
