@@ -336,12 +336,12 @@ void Scheduler::UpdatePriority() {
     while (!itL2.IsDone()) {
         Thread *thread = itL2.Item();
         thread->setWaitTime(thread->getWaitTime() + tickIncrement);
-        
+
         if (thread->getWaitTime() > agingThreshold) {
             int newPriority = thread->getPriority() + priorityBoost;
-            thread->setPriority(newPriority);
             DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from " << thread->getPriority() << " to " << newPriority);
             thread->setPriority(newPriority);
+            thread->setWaitTime(0);
 
             // Check if the thread needs to move from L2 to L1
             if (newPriority >= 100) {
