@@ -304,7 +304,7 @@ Thread::Sleep (bool finishing)
         DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
         << kernel->stats->totalTicks << "]: Thread [" 
         << this->getID() << "] update remaining burst time, from: [" 
-        << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
+        << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "] in temp");
         this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
         this->setStatus(BLOCKED);
         this->setRunTime(0);
