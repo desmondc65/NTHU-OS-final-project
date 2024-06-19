@@ -315,6 +315,7 @@ void Scheduler::UpdatePriority() {
             int newPriority = thread->getPriority() + priorityBoost;
             DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] changes its priority from " << thread->getPriority() << " to " << newPriority );
             thread->setPriority(newPriority);
+            thread->setWaitTime(0);
 
             // Check if the thread needs to move from L3 to L2
             if (newPriority >= 50 && newPriority <= 99) {
@@ -327,7 +328,6 @@ void Scheduler::UpdatePriority() {
             }
         }
         // Increase wait time for all threads in L3
-        thread->setWaitTime(thread->getWaitTime() + tickIncrement);
         itL3.Next();
     }
 
@@ -350,6 +350,7 @@ void Scheduler::UpdatePriority() {
                 DEBUG(dbgMLFQ, "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[1]");
             }
         }
+        
         // Increase wait time for all threads in L2
         thread->setWaitTime(thread->getWaitTime() + tickIncrement);
         itL2.Next();
