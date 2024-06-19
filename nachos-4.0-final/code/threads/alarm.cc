@@ -72,7 +72,7 @@ Alarm::CallBack()
     // check if in level3
     if (kernel->currentThread->getPriority() < 50 && kernel->currentThread->getRRTime() > 200) {
         //how to preempt?
-        DEBUG(dbgMLFQ, "call back: RR preempt");
+        // DEBUG(dbgMLFQ, "call back: RR preempt");
         kernel->interrupt->YieldOnReturn();
     }
     //<TODO>
