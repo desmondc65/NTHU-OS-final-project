@@ -225,9 +225,16 @@ Thread::Yield ()
     if (nextThread != NULL) {
         //update remaining burst time
         int oldBurstTime = this->getRemainingBurstTime();
+        DEBUG(dbgMLFQ, "current run time: " << this->getRunTime() << " old burst time: " << oldBurstTime);
         this->setRemainingBurstTime(oldBurstTime - this->getRunTime());
-        DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" << kernel->stats->totalTicks << "]: Thread [" << this->getID() << "] update remaining burst time, from: [" << oldBurstTime << "] - [" << this->getRunTime() << "] = [" << "], to [" << this->getRemainingBurstTime() << "]");
 
+        //print thread id and remaining burst time
+        int result = oldBurstTime - this->getRunTime();
+        DEBUG(dbgMLFQ, "[UpdateRemainingBurstTime] Tick [" 
+            << kernel->stats->totalTicks << "]: Thread [" 
+            << this->getID() << "] update remaining burst time, from: [" 
+            << oldBurstTime << "] - [" << this->getRunTime() << "], to [" << result << "]");
+            
         //reset some values of current_thread
         this->setStatus(BLOCKED);
         this->setRunTime(0);
