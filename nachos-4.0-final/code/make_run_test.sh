@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Step 4: Compile the Project
-# echo "Cleaning and Compiling the project..."
-# make clean
-# make
+echo "Cleaning and Compiling the project..."
+make clean
+make
 
 case "$1" in
     1)
